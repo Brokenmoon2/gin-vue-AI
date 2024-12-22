@@ -26,7 +26,12 @@
                 <component :is="item.icon"></component>
               </template>
               <template #title>{{ item.title }}</template>
-              <a-menu-item :key="sub.name" v-for="sub in item.child">{{ sub.title }}</a-menu-item>
+              <a-menu-item :key="sub.name" v-for="sub in item.child">
+                {{ sub.title }}
+                <template #icon>
+                  <component :is="sub.icon"></component>
+                </template>
+              </a-menu-item>
             </a-sub-menu>
 
           </template>
@@ -37,9 +42,7 @@
       <div class="gvb_head">
         <div class="gvb_bread_crumbs">
           <a-breadcrumb>
-            <a-breadcrumb-item>Home</a-breadcrumb-item>
-            <a-breadcrumb-item>Channel</a-breadcrumb-item>
-            <a-breadcrumb-item>News</a-breadcrumb-item>
+            <a-breadcrumb-item v-for="item in route.matched">{{ (item.meta as MetaType).title }}</a-breadcrumb-item>
           </a-breadcrumb>
         </div>
         <div class="gvb_function_area">
@@ -50,7 +53,7 @@
           <div class="gvb_user_info_menu">
             <a-dropdown>
               <div class="gvb_user_info_menu_dropdown">
-                <img src="https://www.bing.com/images/search?view=detailV2&ccid=WziAki54&id=DA5233119A12C993A8096BDF32E2F3DD0B0D893D&thid=OIP.WziAki54fkY2NfiOeHGc_QAAAA&mediaurl=https%3a%2f%2fc-ssl.dtstatic.com%2fuploads%2fitem%2f201908%2f27%2f20190827181601_xikty.thumb.400_0.jpg&exph=400&expw=400&q=%e5%83%8f%e7%b4%a0%e5%a4%b4%e5%83%8f&simid=608048489669227975&FORM=IRPRST&ck=198ECF744075CB56BCBF69AC125F23B6&selectedIndex=67&itb=0"
+                <img src="/image/OIP.jpg"
                      alt="">
                 <span class="gvb_user_info_menu_dropdown_span">fengfeng</span>
                 <IconDown></IconDown>
@@ -94,7 +97,12 @@ import {
 import type {Component} from "vue";
 import {useRouter} from "vue-router";
 import {useRoute} from "vue-router";
+import type {RouteMeta} from "vue-router";
 import {ref} from "vue";
+
+interface MetaType extends RouteMeta {
+  title: string
+}
 
 const route = useRoute()
 const router = useRouter()
@@ -142,6 +150,7 @@ const menuList: MenuType[] = [
 const selectedKeys = ref([route.name])
 const openKeys = ref([route.matched[1].name])
 
+console.log(route.matched)
 
 function clickMenu(name: string) {
   router.push({
