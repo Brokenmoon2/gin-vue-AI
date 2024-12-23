@@ -34,16 +34,13 @@
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import type {Component} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import type {RouteMeta} from "vue-router";
 import {IconMenu, IconUser} from "@arco-design/web-vue/es/icon";
 interface MetaType extends RouteMeta {
   title: string
-}
-
-class MetaTypeImpl implements MetaType {
 }
 const route = useRoute()
 const router = useRouter()
@@ -96,4 +93,10 @@ function clickMenu(name: string) {
     name: name,
   })
 }
+
+watch(()=>route.name, ()=>{
+  selectedKeys.value = [route.name]
+  openKeys.value = [route.matched[1].name]
+})
+
 </script>

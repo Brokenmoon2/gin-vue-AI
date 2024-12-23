@@ -8,10 +8,8 @@
       <div class="gvb_head">
         <Gvb_bread_crumb></Gvb_bread_crumb>
         <div class="gvb_function_area">
-          <IconMenu class="action_icon"></IconMenu>
-          <div class="gvb_theme">
-            <IconSun class="action_icon"></IconSun>
-          </div>
+          <IconHome class="action_icon" @click="goIndex"></IconHome>
+          <Gvb_theme></Gvb_theme>
           <div class="gvb_user_info_menu">
             <a-dropdown>
               <div class="gvb_user_info_menu_dropdown">
@@ -45,12 +43,7 @@
 <script setup lang="ts">
 import Gvb_menu from "@/components/admin/gvb_menu.vue";
 import {
-  IconMenu,
-  IconSun,
-  IconUser,
-  IconApps,
-  IconBug,
-  IconBulb,
+  IconHome,
   IconDown,
 } from '@arco-design/web-vue/es/icon';
 import type {Component} from "vue";
@@ -59,10 +52,17 @@ import {useRoute} from "vue-router";
 import Gvb_bread_crumb from "@/components/admin/gvb_bread_crumb.vue";
 import Gvb_logo from "@/components/admin/gvb_logo.vue";
 import Gvb_tabs from "@/components/admin/gvb_tabs.vue";
+import Gvb_theme from "@/components/common/gvb_theme.vue";
 
 
 const route = useRoute()
 const router = useRouter()
+
+function goIndex(){
+  router.push({
+    name: "index"
+  })
+}
 
 
 </script>
@@ -76,6 +76,7 @@ const router = useRouter()
     width: 240px;
     border-right: 1px solid var(--bg);
     height: 100vh;
+    background-color: var(--color-bg-1);
   }
 
   main {
@@ -91,6 +92,7 @@ const router = useRouter()
       justify-content: space-between;
       padding: 0 20px;
       align-items: center;
+      background-color: var(--color-bg-1);
 
       .gvb_function_area {
         display: flex;
@@ -100,6 +102,11 @@ const router = useRouter()
           margin-right: 10px;
           cursor: pointer;
           font-size: 16px;
+          transition: color .3s;
+
+          &:hover{
+            color: var(--active);
+          }
         }
 
         .gvb_user_info_menu {
@@ -121,7 +128,6 @@ const router = useRouter()
         }
       }
     }
-
 
 
     .gvb_container {
