@@ -1,6 +1,6 @@
 <template>
   <div class="gvb_admin">
-    <aside>
+    <aside :class="{collapsed: store.collapsed}">
       <Gvb_logo></Gvb_logo>
       <Gvb_menu></Gvb_menu>
     </aside>
@@ -42,10 +42,7 @@
 </template>
 <script setup lang="ts">
 import Gvb_menu from "@/components/admin/gvb_menu.vue";
-import {
-  IconHome,
-  IconDown,
-} from '@arco-design/web-vue/es/icon';
+import {IconHome, IconDown,} from '@arco-design/web-vue/es/icon';
 import type {Component} from "vue";
 import {useRouter} from "vue-router";
 import {useRoute} from "vue-router";
@@ -53,12 +50,13 @@ import Gvb_bread_crumb from "@/components/admin/gvb_bread_crumb.vue";
 import Gvb_logo from "@/components/admin/gvb_logo.vue";
 import Gvb_tabs from "@/components/admin/gvb_tabs.vue";
 import Gvb_theme from "@/components/common/gvb_theme.vue";
+import {useStore} from "@/stores";
 
-
+const store = useStore()
 const route = useRoute()
 const router = useRouter()
 
-function goIndex(){
+function goIndex() {
   router.push({
     name: "index"
   })
@@ -77,12 +75,23 @@ function goIndex(){
     border-right: 1px solid var(--bg);
     height: 100vh;
     background-color: var(--color-bg-1);
+    transition: all .3s;
+    position: relative;
+  }
+
+  aside.collapsed{
+    width: 48px;
+
+    &~main{
+      width: calc(100% - 48px);
+    }
   }
 
   main {
     width: calc(100% - 240px);
     overflow-x: hidden;
     overflow-y: auto;
+    transition: all .3s;
 
     .gvb_head {
       width: 100%;
@@ -104,7 +113,7 @@ function goIndex(){
           font-size: 16px;
           transition: color .3s;
 
-          &:hover{
+          &:hover {
             color: var(--active);
           }
         }

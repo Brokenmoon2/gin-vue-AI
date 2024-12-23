@@ -2,8 +2,8 @@
   <div class="gvb_logo">
     <img src="/image/logo.png" alt="">
     <div class="logo_head">
-      <div>空无的博客</div>
-      <div>kongwu</div>
+      <div>枫枫知道</div>
+      <div>fengfengzhidao</div>
     </div>
   </div>
 </template>
@@ -15,14 +15,17 @@
   padding: 20px;
   align-items: center;
   border-bottom: 1px solid var(--bg);
+  transition: all .3s;
 
   img {
     width: 60px;
     height: 60px;
+    transition: all .3s;
   }
 
   .logo_head {
     margin-left: 20px;
+    transition: all .3s;
 
     > div:nth-child(1) {
       font-size: 22px;
@@ -32,6 +35,21 @@
 
     > div:nth-child(2) {
       font-size: 12px;
+    }
+  }
+}
+
+.collapsed {
+  .gvb_logo {
+    padding: 2px;
+
+    img {
+      width: 42px;
+      height: 42px;
+    }
+
+    .logo_head {
+      display: none;
     }
   }
 }

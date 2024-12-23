@@ -1,11 +1,11 @@
-
-
 <template>
   <div class="gvb_menu">
     <a-menu
         @menu-item-click="clickMenu"
         v-model:selected-keys="selectedKeys"
         v-model:open-keys="openKeys"
+        show-collapse-button
+        @collapse="collapse"
     >
       <template v-for="item in menuList" :key="item.key">
         <a-menu-item :key="item.name" v-if="item.child?.length === 0">
@@ -37,13 +37,13 @@
 import {ref, watch} from "vue";
 import type {Component} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import type {RouteMeta} from "vue-router";
+import {useStore} from "@/stores";
 import {IconMenu, IconUser} from "@arco-design/web-vue/es/icon";
-interface MetaType extends RouteMeta {
-  title: string
-}
+
+const store = useStore()
 const route = useRoute()
 const router = useRouter()
+
 interface MenuType {
   key: string
   title: string
@@ -87,6 +87,10 @@ const menuList: MenuType[] = [
 const selectedKeys = ref([route.name])
 const openKeys = ref([route.matched[1].name])
 
+function collapse(collapsed: boolean) {
+  store.setCollapsed(collapsed)
+}
+
 
 function clickMenu(name: string) {
   router.push({
@@ -94,9 +98,35 @@ function clickMenu(name: string) {
   })
 }
 
-watch(()=>route.name, ()=>{
+watch(() => route.name, () => {
   selectedKeys.value = [route.name]
   openKeys.value = [route.matched[1].name]
 })
 
 </script>
+
+
+<style lang="scss">
+.gvb_menu {
+  .arco-menu {
+    position: inherit;
+  }
+
+  .arco-menu-collapse-button {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    opacity: 0;
+    transition: all .3s;
+  }
+}
+
+aside:hover {
+  .gvb_menu {
+    .arco-menu-collapse-button {
+      opacity: 1;
+    }
+  }
+}
+</style>

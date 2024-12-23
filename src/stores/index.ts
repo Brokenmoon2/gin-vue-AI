@@ -2,20 +2,21 @@ import {ref, computed} from 'vue'
 import {defineStore} from 'pinia'
 
 
-const theme = true // true light   false  dark
-
+const theme: boolean = true // true light   false  dark
+const collapsed: boolean = false
 export const useStore = defineStore('counter', {
     state() {
         return {
             theme: theme,
+            collapsed: collapsed, // 后台侧边栏的搜索状态，默认展开
         }
     },
     actions: {
-        setTheme(localTheme?: boolean){
-            if (localTheme!==undefined){
+        setTheme(localTheme?: boolean) {
+            if (localTheme !== undefined) {
                 // 我传了
                 this.theme = localTheme
-            }else {
+            } else {
                 this.theme = !this.theme
             }
             document.documentElement.style.colorScheme = this.themeString
@@ -23,17 +24,20 @@ export const useStore = defineStore('counter', {
 
             localStorage.setItem("theme", JSON.stringify(this.theme))
         },
-        loadTheme(){
+        loadTheme() {
             let val = localStorage.getItem("theme")
-            if (val === null){
+            if (val === null) {
                 return
             }
             try {
                 this.theme = JSON.parse(val)
                 this.setTheme(this.theme)
-            }catch (e){
+            } catch (e) {
                 return;
             }
+        },
+        setCollapsed(collapsed: boolean) {
+            this.collapsed = collapsed
         }
     },
     getters: {

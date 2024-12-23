@@ -8,5 +8,12 @@
 
 <script setup lang="ts">
 import {useRoute} from "vue-router";
+import type {RouteMeta} from "vue-router";
+
+
 const route = useRoute()
+
+interface MetaType extends RouteMeta {
+  title: string
+}
 </script>
