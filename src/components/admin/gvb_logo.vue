@@ -26,6 +26,8 @@
   .logo_head {
     margin-left: 20px;
     transition: all .3s;
+    transform: scale(1);
+    transform-origin: left;
 
     > div:nth-child(1) {
       font-size: 22px;
@@ -49,7 +51,7 @@
     }
 
     .logo_head {
-      display: none;
+      transform: scale(0);
     }
   }
 }

@@ -1,14 +1,29 @@
-import {ref, computed} from 'vue'
 import {defineStore} from 'pinia'
 
+export interface userInfoType {
+    nick_name: string
+    role: number // 角色
+    user_id: number // 用户id
+    avatar: string
+    token: string
+}
 
 const theme: boolean = true // true light   false  dark
 const collapsed: boolean = false
+const userInfo: userInfoType = {
+    nick_name: "枫枫",
+    role: 0,
+    user_id: 0,
+    avatar: "https://img1.baidu.com/it/u=2961575590,2057372040&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+    token: "",
+}
+
 export const useStore = defineStore('counter', {
     state() {
         return {
             theme: theme,
             collapsed: collapsed, // 后台侧边栏的搜索状态，默认展开
+            userInfo: userInfo,
         }
     },
     actions: {

@@ -10,22 +10,7 @@
         <div class="gvb_function_area">
           <IconHome class="action_icon" @click="goIndex"></IconHome>
           <Gvb_theme></Gvb_theme>
-          <div class="gvb_user_info_menu">
-            <a-dropdown>
-              <div class="gvb_user_info_menu_dropdown">
-                <img src="/image/OIP.jpg"
-                     alt="">
-                <span class="gvb_user_info_menu_dropdown_span">kongwu</span>
-                <IconDown></IconDown>
-              </div>
-              <template #content>
-                <a-doption>Option 1</a-doption>
-                <a-doption>Option 3</a-doption>
-                <a-doption>Option 4</a-doption>
-                <a-doption>Option 5</a-doption>
-              </template>
-            </a-dropdown>
-          </div>
+          <Gvb_user_info_menu></Gvb_user_info_menu>
         </div>
       </div>
       <Gvb_tabs></Gvb_tabs>
@@ -51,6 +36,7 @@ import Gvb_logo from "@/components/admin/gvb_logo.vue";
 import Gvb_tabs from "@/components/admin/gvb_tabs.vue";
 import Gvb_theme from "@/components/common/gvb_theme.vue";
 import {useStore} from "@/stores";
+import Gvb_user_info_menu from "@/components/common/gvb_user_info_menu.vue";
 
 const store = useStore()
 const route = useRoute()
@@ -79,10 +65,10 @@ function goIndex() {
     position: relative;
   }
 
-  aside.collapsed{
+  aside.collapsed {
     width: 48px;
 
-    &~main{
+    & ~ main {
       width: calc(100% - 48px);
     }
   }

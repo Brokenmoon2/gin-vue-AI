@@ -7,7 +7,7 @@
         show-collapse-button
         @collapse="collapse"
     >
-      <template v-for="item in menuList" :key="item.key">
+      <template v-for="item in menuList" :key="item.name">
         <a-menu-item :key="item.name" v-if="item.child?.length === 0">
           {{ item.title }}
           <template #icon>
@@ -45,7 +45,6 @@ const route = useRoute()
 const router = useRouter()
 
 interface MenuType {
-  key: string
   title: string
   icon?: Component
   name?: string // 路由名字
@@ -54,30 +53,31 @@ interface MenuType {
 
 
 const menuList: MenuType[] = [
-  {key: "1", title: "首页", icon: IconMenu, name: "home", child: []},
+  {title: "首页", icon: IconMenu, name: "home", child: []},
   {
-    key: "2", title: "个人中心", icon: IconUser, name: "user_center", child: [
-      {key: "2-1", title: "我的信息", icon: IconUser, name: "user_info"},
+    title: "个人中心", icon: IconUser, name: "user_center", child: [
+      {title: "我的信息", icon: IconUser, name: "user_info"},
     ]
   },
   {
-    key: "3", title: "文章管理", icon: IconUser, name: "article", child: [
-      {key: "3-1", title: "文章列表", icon: IconUser, name: "article_list"},
+    title: "文章管理", icon: IconUser, name: "article", child: [
+      {title: "文章列表", icon: IconUser, name: "article_list"},
     ]
   },
   {
-    key: "4", title: "用户管理", icon: IconUser, name: "users", child: [
-      {key: "4-1", title: "用户列表", icon: IconUser, name: "user_list"},
+    title: "用户管理", icon: IconUser, name: "users", child: [
+      {title: "用户列表", icon: IconUser, name: "user_list"},
     ]
   },
   {
-    key: "5", title: "群聊管理", icon: IconUser, name: "chat_group", child: [
-      {key: "5-1", title: "聊天记录", icon: IconUser, name: "chat_list"},
+    title: "群聊管理", icon: IconUser, name: "chat_group", child: [
+      {title: "聊天记录", icon: IconUser, name: "chat_list"},
     ]
   },
   {
-    key: "6", title: "系统管理", icon: IconUser, name: "system", child: [
-      {key: "6-1", title: "菜单列表", icon: IconUser, name: "menu_list"},
+    title: "系统管理", icon: IconUser, name: "system", child: [
+      {title: "菜单列表", icon: IconUser, name: "menu_list"},
+      {title: "系统日志", icon: IconUser, name: "log_list"},
     ]
   },
 
