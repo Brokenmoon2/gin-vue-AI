@@ -4,6 +4,7 @@
     <a-button @click="visible = true">登录</a-button>
     <gvb_theme></gvb_theme>
     <router-link to="/login">登录</router-link>
+    <router-link to="/admin">后台</router-link>
   </div>
 </template>
 <script setup lang="ts">
@@ -13,7 +14,6 @@ const visible = ref(false)
 import Gvb_login from "@/components/common/gvb_login.vue";
 import Gvb_theme from "@/components/common/gvb_theme.vue";
 
-console.log(import.meta.env.VITE_SERVER_URL)
 
 </script>
 <style lang="scss">

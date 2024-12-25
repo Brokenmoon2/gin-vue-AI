@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia'
+import {parseToken} from "@/utils/jwt";
 
 export interface userInfoType {
     nick_name: string
@@ -6,6 +7,7 @@ export interface userInfoType {
     user_id: number // 用户id
     avatar: string
     token: string
+    exp: number // 过期时间 需要x1000
 }
 
 const theme: boolean = true // true light   false  dark
@@ -16,6 +18,7 @@ const userInfo: userInfoType = {
     user_id: 0,
     avatar: "https://img1.baidu.com/it/u=2961575590,2057372040&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
     token: "",
+    exp: 0,
 }
 
 export const useStore = defineStore('counter', {
@@ -53,6 +56,23 @@ export const useStore = defineStore('counter', {
         },
         setCollapsed(collapsed: boolean) {
             this.collapsed = collapsed
+        },
+        setToken(token: string) {
+            this.userInfo.token = token
+            let info = parseToken(token)
+            Object.assign(this.userInfo, info)
+            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+        },
+        loadToken() {
+            let val = localStorage.getItem("userInfo")
+            if (val === null) {
+                return
+            }
+            try {
+                this.userInfo = JSON.parse(val)
+            } catch (e) {
+                return;
+            }
         }
     },
     getters: {

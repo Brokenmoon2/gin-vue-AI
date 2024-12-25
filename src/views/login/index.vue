@@ -1,13 +1,23 @@
 <template>
   <div class="gvb_login">
     <div class="gvb_login_mask">
-      <gvb_login_form></gvb_login_form>
+      <gvb_login_form @ok="ok"></gvb_login_form>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import Gvb_login_form from "@/components/common/gvb_login_form.vue";
+import router from "@/router";
 
+function ok() {
+  let back = window.history.state.back
+  // 拿不到之前的路径，就跳转首页
+  if (back === null) {
+    router.push({name: "index"})
+    return
+  }
+  router.push(back)
+}
 
 </script>
 <style lang="scss">

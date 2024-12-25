@@ -22,7 +22,7 @@
         </template>
       </a-input>
     </a-form-item>
-    <a-button type="primary">登录</a-button>
+    <a-button type="primary" @click="loginEmail">登录</a-button>
     <div class="other-login">
       <div class="label">第三方登录</div>
       <div class="icons">
@@ -37,12 +37,49 @@
 <script setup lang="ts">
 import "@/assets/font.css"
 import {IconLock, IconUser} from "@arco-design/web-vue/es/icon";
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
+import {loginEmailApi} from "@/api/user_api";
+import type {loginEmailType} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
+import {useStore} from "@/stores";
+import {useRoute} from "vue-router";
 
-const form = reactive({
+const emits = defineEmits(["ok"])
+const route = useRoute()
+const store = useStore()
+const form = reactive<loginEmailType>({
   user_name: "",
   password: "",
 })
+
+const formRef = ref()
+
+function formReset() {
+  formRef.value.resetFields(Object.keys(form))
+  formRef.value.clearValidate(Object.keys(form))
+}
+
+defineExpose({
+  formReset
+})
+
+
+async function loginEmail() {
+  let val = await formRef.value.validate()
+  if (val) {
+    return
+  }
+
+  let res = await loginEmailApi(form)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  Message.success(res.msg)
+  store.setToken(res.data)
+  emits("ok")
+}
+
 
 </script>
 
