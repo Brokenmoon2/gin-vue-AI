@@ -1,4 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
+import type {RouteMeta} from 'vue-router'
+import {useStore} from "@/stores";
+import {Message} from "@arco-design/web-vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,7 +28,8 @@ const router = createRouter({
       name: "admin",
       component: () => import('../views/admin/index.vue'),
       meta: {
-        title: "首页"
+        title: "首页",
+        isLogin: true,
       },
       children: [
         {
@@ -57,7 +61,9 @@ const router = createRouter({
           path: "article",
           name: "article",
           meta: {
-            title: "文章管理"
+            title: "文章管理",
+            isAdmin: true,
+            isTourist: true,
           },
           children: [
             {
@@ -74,7 +80,9 @@ const router = createRouter({
           path: "users",
           name: "users",
           meta: {
-            title: "用户管理"
+            title: "用户管理",
+            isAdmin: true,
+            isTourist: true,
           },
           children: [
             {
@@ -91,7 +99,9 @@ const router = createRouter({
           path: "chat_group",
           name: "chat_group",
           meta: {
-            title: "群聊管理"
+            title: "群聊管理",
+            isAdmin: true,
+            isTourist: true,
           },
           children: [
             {
@@ -108,7 +118,9 @@ const router = createRouter({
           path: "system",
           name: "system",
           meta: {
-            title: "系统管理"
+            title: "系统管理",
+            isAdmin: true,
+            isTourist: false,
           },
           children: [
             {
@@ -135,3 +147,53 @@ const router = createRouter({
 })
 
 export default router
+
+router.beforeEach((to, from, next) => {
+  const store = useStore()
+  const meta = to.meta
+  if (meta.isLogin && !store.isLogin) {
+    // 需要登录，但是我没有登录
+    Message.warning("需要登录")
+    router.push({name: from.name as string})
+    return
+  }
+  /*
+  isLogin 登录了就能看
+  isAdmin  管理员能看
+  isTourist  游客能看，管理员也能看
+   */
+
+  // 如果我是普通用户，那我就不能访问admin或者游客权限的页面
+  if (store.userInfo.role === 2 && (meta.isAdmin || meta.isTourist)) {
+    Message.warning("权限不足1")
+    router.push({name: from.name as string})
+    return
+  }
+
+  // 如果我是游客，那我就不能访问游客权限为false的
+  if (store.isTourist && meta.isTourist === false) {
+    Message.warning("权限不足2")
+    router.push({name: from.name as string})
+    return
+  }
+
+
+  // if (meta.isAdmin){
+  //     // 需要管理员权限
+  //     // 管理员也能看，游客也能看
+  //     if (meta.isTourist && !store.isTourist && !store.isAdmin) {
+  //         // 身份不是游客
+  //         Message.warning("权限不足2")
+  //         router.push({name: from.name as string})
+  //         return
+  //     }
+  //     if (!meta.isTourist && !store.isAdmin){
+  //         // 游客不能看，校验他不是管理员
+  //         Message.warning("权限不足1")
+  //         router.push({name: from.name as string})
+  //         return
+  //     }
+  // }
+
+  next()
+})

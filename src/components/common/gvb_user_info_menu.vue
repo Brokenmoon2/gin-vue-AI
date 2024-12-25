@@ -64,6 +64,8 @@ const dopList: dopType[] = [
 function select(value: any) {
   let val = (value as string)
   if (val === "logout") {
+    store.logout()
+    router.push({name: "index"})
     return
   }
   router.push({

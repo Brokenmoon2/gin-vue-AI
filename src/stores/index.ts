@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia'
 import {parseToken} from "@/utils/jwt";
+import {logoutApi} from "@/api/user_api";
 
 export interface userInfoType {
     nick_name: string
@@ -13,10 +14,10 @@ export interface userInfoType {
 const theme: boolean = true // true light   false  dark
 const collapsed: boolean = false
 const userInfo: userInfoType = {
-    nick_name: "枫枫",
+    nick_name: "",
     role: 0,
     user_id: 0,
-    avatar: "https://img1.baidu.com/it/u=2961575590,2057372040&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500",
+    avatar: "",
     token: "",
     exp: 0,
 }
@@ -73,11 +74,27 @@ export const useStore = defineStore('counter', {
             } catch (e) {
                 return;
             }
+        },
+        async logout() {
+            await logoutApi()
+            this.userInfo = userInfo
         }
     },
     getters: {
         themeString(): string {
             return this.theme ? "light" : "dark"
+        },
+        // 是否登录
+        isLogin(): boolean {
+            return this.userInfo.role !== 0
+        },
+        // 判断是不是管理员
+        isAdmin(): boolean {
+            return this.userInfo.role == 1
+        },
+        // 判断是不是游客
+        isTourist(): boolean {
+            return this.userInfo.role == 3
         }
     }
 })
