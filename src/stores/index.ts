@@ -1,8 +1,12 @@
 import {defineStore} from 'pinia'
 import {parseToken} from "@/utils/jwt";
 import {logoutApi} from "@/api/user_api";
+import {Message} from "@arco-design/web-vue";
+import {userInfoApi} from "@/api/user_api";
+import type {userInfoType} from "@/api/user_api";
 
-export interface userInfoType {
+export interface userStoreInfoType {
+    user_name: string
     nick_name: string
     role: number // 角色
     user_id: number // 用户id
@@ -13,7 +17,8 @@ export interface userInfoType {
 
 const theme: boolean = true // true light   false  dark
 const collapsed: boolean = false
-const userInfo: userInfoType = {
+const userInfo: userStoreInfoType = {
+    user_name: "",
     nick_name: "",
     role: 0,
     user_id: 0,
@@ -58,10 +63,22 @@ export const useStore = defineStore('counter', {
         setCollapsed(collapsed: boolean) {
             this.collapsed = collapsed
         },
-        setToken(token: string) {
+        async setToken(token: string) {
             this.userInfo.token = token
+            // 调用户信息的接口
+            let res = await userInfoApi()
             let info = parseToken(token)
-            Object.assign(this.userInfo, info)
+            let data = res.data
+            this.userInfo = {
+                user_name: data.user_name,
+                nick_name: data.nick_name,
+                role: info.role,
+                user_id: info.user_id,
+                avatar: data.avatar,
+                token: token,
+                exp: info.exp,
+            }
+
             localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
         },
         loadToken() {
@@ -72,12 +89,26 @@ export const useStore = defineStore('counter', {
             try {
                 this.userInfo = JSON.parse(val)
             } catch (e) {
+                this.clearUserInfo()
+                return;
+            }
+            // 判断token是不是过期了
+            let exp = Number(this.userInfo.exp) * 1000
+            let nowTime = new Date().getTime()
+            if (exp - nowTime <= 0) {
+                // 过期
+                Message.warning("登录已过期")
+                this.clearUserInfo()
                 return;
             }
         },
         async logout() {
             await logoutApi()
+            this.clearUserInfo()
+        },
+        clearUserInfo() {
             this.userInfo = userInfo
+            localStorage.removeItem("userInfo")
         }
     },
     getters: {
