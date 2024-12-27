@@ -7,7 +7,7 @@
       <div class="action_group" v-if="!noActionGroup">
         <a-select placeholder="操作" style="width: 120px;" allow-clear :options="actionOptions"
                   v-model="actionValue"></a-select>
-        <a-button type="primary" status="danger" v-if="actionValue" @click="actionMethod">执行</a-button>
+        <a-button type="primary" status="danger" v-if="actionValue !== undefined" @click="actionMethod">执行</a-button>
       </div>
       <div class="action_search">
         <a-input-search
@@ -80,6 +80,12 @@ import {dateTimeFormat} from "@/utils/date";
 import {Message} from "@arco-design/web-vue";
 import {defaultDeleteApi} from "@/api";
 
+export interface optionType {
+  label: string
+  value?: string | number
+  callback?: (idList: (number | string)[]) => Promise<boolean>
+}
+
 interface Props {
   url: (params: paramsType) => Promise<baseResponse<listDataType<any>>>
   columns: TableColumnData[]
@@ -88,6 +94,7 @@ interface Props {
   addLabel?: string
   defaultDelete?: boolean // 是否启用默认删除
   noActionGroup?: boolean// 不启用操作组
+  actionGroup?: optionType[], // 操作组
 }
 
 const props = defineProps<Props>()
@@ -107,29 +114,52 @@ const rowSelection = reactive<TableRowSelection>({
   onlyCurrent: false,
 });
 
-interface optionType {
-  label: string
-  value: string | number
-}
 
 // 操作组
 const actionOptions = ref<optionType[]>([
-  {label: "批量删除", value: 1},
+  {label: "批量删除", value: 0},
 ])
 
-const actionValue = ref<number | string | undefined>(undefined)
+
+function initActionGroup() {
+  if (!props.actionGroup) return
+  for (let i = 0; i < props.actionGroup.length; i++) {
+    actionOptions.value.push({
+      label: props.actionGroup[i].label,
+      value: i + 1,
+      callback: props.actionGroup[i].callback
+    })
+  }
+}
+
+initActionGroup()
+const actionValue = ref<number | undefined>(undefined)
 
 
 function actionMethod() {
   // 判断是不是1
-  if (actionValue.value === 1) {
+  if (actionValue.value === 0) {
     // 批量删除
     if (selectedKeys.value.length === 0) {
       Message.warning("请选择要删除的记录")
       return
     }
     removeIdData(selectedKeys.value)
+    return;
   }
+  const action = actionOptions.value[actionValue.value as number]
+  if (!action.callback) {
+    return;
+  }
+  action.callback(selectedKeys.value).then(res => {
+    if (res) {
+      selectedKeys.value = []
+      getList()
+      return
+    }
+  })
+
+
 }
 
 function add() {

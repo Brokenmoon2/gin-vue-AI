@@ -1,6 +1,14 @@
 <template>
   <div>
-    <gvb_table :url="userListApi" :columns="columns" default-delete add-label="创建用户" @add="add" @edit="edit" @remove="remove">
+    <gvb_table
+        :url="userListApi"
+        :columns="columns"
+        default-delete
+        add-label="创建用户"
+        @add="add"
+        @edit="edit"
+        :action-group="actionGroup"
+        @remove="remove">
       <template #avatar="{record}">
         <a-avatar :imageUrl="record.avatar"></a-avatar>
       </template>
@@ -13,6 +21,7 @@
 import Gvb_table from "@/components/admin/gvb_table.vue";
 import {userListApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
+import type {optionType} from "@/components/admin/gvb_table.vue";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
@@ -23,6 +32,16 @@ const columns = [
   {title: 'ip', dataIndex: 'ip'},
   {title: '注册时间', slotName: 'created_at'},
   {title: '操作', slotName: 'action'},
+]
+
+
+const actionGroup: optionType[] = [
+  {
+    label: "批量拉黑",
+    callback: async (idList: (number | string)[]): Promise<boolean> => {
+      return true
+    }
+  }
 ]
 
 function add() {
