@@ -4,12 +4,12 @@
         :url="userListApi"
         :columns="columns"
         default-delete
-        no-check
         add-label="创建用户"
+        no-confirm
         :filter-group="filterGroup"
+        search-placeholder="搜索用户名、昵称"
         @add="add"
-        @edit="edit"
-        @remove="remove">
+        @edit="edit">
       <template #avatar="{record}">
         <a-avatar :imageUrl="record.avatar"></a-avatar>
       </template>
@@ -24,10 +24,10 @@ import {userListApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
 import type {filterOptionType} from "@/components/admin/gvb_table.vue";
 import {roleIdListApi} from "@/api/role_api";
+import type {RecordType} from "@/components/admin/gvb_table.vue";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
-  {title: '用户名', dataIndex: 'user_name'},
   {title: '头像', slotName: 'avatar'},
   {title: '邮箱', dataIndex: 'email'},
   {title: '角色', dataIndex: 'role'},
@@ -47,12 +47,8 @@ function add() {
   console.log("add")
 }
 
-function edit(record: userInfoType) {
+function edit(record: RecordType<userInfoType>): void {
   console.log(record)
-}
-
-function remove(idList: number[]) {
-  console.log(idList)
 }
 
 </script>
