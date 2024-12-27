@@ -15,11 +15,16 @@
             v-model="params.key" @keydown.enter="search"
             @search="search"></a-input-search>
       </div>
-      <div class="action_other_search"></div>
-      <div class="action_filter">
-        <a-select placeholder="过滤"></a-select>
+      <slot name="action_other_search"></slot>
+      <div class="action_filter" v-if="filterGroup.length">
+        <a-select
+            :placeholder="item.label"
+            :options="item.options"
+            allow-clear
+            @change="filterChange(item, $event)"
+            v-for="item in filterGroup"></a-select>
       </div>
-      <div class="action_slot"></div>
+      <slot name="action_slot"></slot>
       <div class="action_flush">
         <a-button @click="flush">
           <IconRefresh></IconRefresh>
@@ -29,13 +34,14 @@
 
     <div class="gvb_table_data">
       <div class="gvb_table_source">
-        <a-table :row-key=rowKey :columns="props.columns" :data="data.list" :row-selection="rowSelection"
+        <a-table :row-key=rowKey :columns="props.columns" :data="data.list"
+                 :row-selection="props.noCheck ? undefined : rowSelection"
                  v-model:selectedKeys="selectedKeys" :pagination="false">
           <template #columns>
             <template v-for="item in props.columns">
               <a-table-column v-if="item.render" :title="item.title as string">
                 <template #cell="data">
-                  <component :id="item.render(data)"></component>
+                  <component :is="item.render(data) as Component"></component>
                 </template>
               </a-table-column>
               <a-table-column v-else-if="!item.slotName" :title="item.title as string"
@@ -73,17 +79,29 @@
 <script setup lang="ts">
 import {IconRefresh} from "@arco-design/web-vue/es/icon";
 import {reactive, ref} from "vue";
+import type {Component} from "vue";
 import type {baseResponse, listDataType} from "@/api";
 import type {paramsType} from "@/api";
 import type {TableColumnData, TableData, TableRowSelection} from "@arco-design/web-vue";
 import {dateTimeFormat} from "@/utils/date";
 import {Message} from "@arco-design/web-vue";
-import {defaultDeleteApi} from "@/api";
+import {defaultDeleteApi, defaultOptionApi} from "@/api";
+import type {optionType} from "@/types";
 
-export interface optionType {
+export interface actionOptionType {
   label: string
-  value?: string | number
+  value?: number
   callback?: (idList: (number | string)[]) => Promise<boolean>
+}
+
+type filterFunc = (params?: paramsType) => Promise<baseResponse<optionType[]>>
+
+export interface filterOptionType {
+  label: string
+  value?: number
+  column: string
+  source: optionType[] | string | filterFunc
+  options?: optionType[] // 可以是现成的数据，也可以是一个url地址，也可以是一个函数
 }
 
 interface Props {
@@ -94,7 +112,9 @@ interface Props {
   addLabel?: string
   defaultDelete?: boolean // 是否启用默认删除
   noActionGroup?: boolean// 不启用操作组
-  actionGroup?: optionType[], // 操作组
+  actionGroup?: actionOptionType[], // 操作组
+  noCheck?: boolean // 不能选择
+  filterGroup?: filterOptionType[], // 过滤组
 }
 
 const props = defineProps<Props>()
@@ -116,7 +136,7 @@ const rowSelection = reactive<TableRowSelection>({
 
 
 // 操作组
-const actionOptions = ref<optionType[]>([
+const actionOptions = ref<actionOptionType[]>([
   {label: "批量删除", value: 0},
 ])
 
@@ -158,8 +178,49 @@ function actionMethod() {
       return
     }
   })
+}
 
 
+// 过滤
+const filterGroup = ref<filterOptionType[]>([])
+
+
+async function initFilterGroup() {
+  if (!props.filterGroup) return
+  for (let i = 0; i < props.filterGroup.length; i++) {
+    // 处理source的数据
+    const item = props.filterGroup[i]
+    let source: optionType[] = []
+    switch (typeof item.source) {
+      case "function":
+        let res1 = await (item.source as filterFunc)()
+        source = res1.data
+        break
+      case "object":
+        source = (item.source as optionType[])
+        break
+      case "string":
+        // 请求接口
+        let res2 = await defaultOptionApi(item.source as string)
+        source = res2.data
+        break
+    }
+
+    filterGroup.value.push({
+      label: item.label,
+      value: i,
+      column: item.column,
+      options: source,
+      source: item.source
+    })
+  }
+}
+
+initFilterGroup()
+
+function filterChange(item: any, val: any) {
+  console.log(item.column, val)
+  getList({[item.column]: val})
 }
 
 function add() {
@@ -208,7 +269,10 @@ const params = reactive<paramsType>({
   key: ""
 })
 
-async function getList() {
+async function getList(p?: paramsType & any) {
+  if (p) {
+    Object.assign(params, p)
+  }
   let res = await props.url(params)
   data.list = res.data.list
   data.count = res.data.count
@@ -258,6 +322,14 @@ getList()
 
       button {
         margin-left: 10px;
+      }
+    }
+
+    .action_filter {
+      display: flex;
+
+      > .arco-select {
+        margin-right: 10px;
       }
     }
 

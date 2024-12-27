@@ -4,10 +4,11 @@
         :url="userListApi"
         :columns="columns"
         default-delete
+        no-check
         add-label="创建用户"
+        :filter-group="filterGroup"
         @add="add"
         @edit="edit"
-        :action-group="actionGroup"
         @remove="remove">
       <template #avatar="{record}">
         <a-avatar :imageUrl="record.avatar"></a-avatar>
@@ -21,7 +22,8 @@
 import Gvb_table from "@/components/admin/gvb_table.vue";
 import {userListApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
-import type {optionType} from "@/components/admin/gvb_table.vue";
+import type {filterOptionType} from "@/components/admin/gvb_table.vue";
+import {roleIdListApi} from "@/api/role_api";
 
 const columns = [
   {title: '昵称', dataIndex: 'nick_name'},
@@ -33,14 +35,11 @@ const columns = [
   {title: '注册时间', slotName: 'created_at'},
   {title: '操作', slotName: 'action'},
 ]
-
-
-const actionGroup: optionType[] = [
+const filterGroup: filterOptionType[] = [
   {
-    label: "批量拉黑",
-    callback: async (idList: (number | string)[]): Promise<boolean> => {
-      return true
-    }
+    label: "角色过滤",
+    column: "role",
+    source: roleIdListApi
   }
 ]
 
