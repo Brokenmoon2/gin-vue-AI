@@ -12,13 +12,9 @@ export interface baseResponse<T> {
     msg: string
 }
 
-export interface listResponse<T> {
-    code: number
-    data: {
-        count: number
-        list: T[]
-    }
-    msg: string
+export interface listDataType<T> {
+    count: number
+    list: T[]
 }
 
 export interface paramsType {
@@ -47,3 +43,12 @@ useAxios.interceptors.response.use((response) => {
     Message.error(err.message)
     return Promise.reject(err.message)
 })
+
+
+export function defaultDeleteApi<T extends number|string>(url: string, idList: T[]) :Promise<baseResponse<string>>{
+    return useAxios.delete(url, {
+        data: {
+            id_list: idList,
+        }
+    })
+}

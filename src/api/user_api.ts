@@ -1,4 +1,4 @@
-import type {baseResponse, paramsType, listResponse} from "@/api/index";
+import type {baseResponse, paramsType, listDataType} from "@/api/index";
 import {useAxios} from "@/api/index";
 
 export interface loginEmailType {
@@ -10,10 +10,17 @@ export function loginEmailApi(request: loginEmailType): Promise<baseResponse<str
     return useAxios.post("/api/email_login", request)
 }
 
-export function logoutApi():Promise<baseResponse<string>>{
+export function logoutApi(): Promise<baseResponse<string>> {
     return useAxios.post("/api/logout")
 }
 
+export function loginQQPathApi(): Promise<baseResponse<string>> {
+    return useAxios.get("/api/qq_login_path")
+}
+
+export function qqLoginApi(code: string): Promise<baseResponse<string>> {
+    return useAxios.post("/api/login", null, {params: {code}})
+}
 
 export interface userInfoType {
     id: number
@@ -38,6 +45,6 @@ export function userInfoApi(): Promise<baseResponse<userInfoType>> {
 }
 
 
-export function userListApi(params: paramsType): Promise<listResponse<userInfoType>>{
-    return useAxios.get("/api/users?limit=10", {params})
+export function userListApi(params: paramsType): Promise<baseResponse<listDataType<userInfoType>>> {
+    return useAxios.get("/api/users", {params})
 }
