@@ -34,6 +34,7 @@ export interface userInfoType {
     token: string
     ip: string
     role: string
+    role_id: number
     sign_status: string,
     integral: number // 积分
     sign: string // slogan
@@ -47,4 +48,25 @@ export function userInfoApi(): Promise<baseResponse<userInfoType>> {
 
 export function userListApi(params: paramsType): Promise<baseResponse<listDataType<userInfoType>>> {
     return useAxios.get("/api/users", {params})
+}
+
+export interface userCreateRequest {
+    nick_name: string
+    password: string
+    role: number
+    user_name: string
+}
+
+export function userCreateApi(data: userCreateRequest): Promise<baseResponse<string>> {
+    return useAxios.post("/api/users", data)
+}
+
+
+export interface userUpdateRequest {
+    nick_name: string
+    role: number
+    user_id: number
+}
+export function userUpdateApi(data:userUpdateRequest): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user_role", data)
 }

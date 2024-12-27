@@ -115,11 +115,11 @@ export interface filterOptionType {
 }
 
 interface Props {
-  url: (params: paramsType) => Promise<baseResponse<listDataType<any>>>
-  columns: TableColumnData[]
-  limit?: number
-  rowKey?: string
-  addLabel?: string
+  url: (params: paramsType) => Promise<baseResponse<listDataType<any>>> // 请求列表数据的api函数
+  columns: TableColumnData[] // 字段
+  limit?: number // 显示多少条，默认10条
+  rowKey?: string // 选中的时候，按照什么选，默认是id
+  addLabel?: string // 添加按钮的提示文字
   defaultDelete?: boolean // 是否启用默认删除
   noActionGroup?: boolean// 不启用操作组
   actionGroup?: actionOptionType[], // 操作组
@@ -325,6 +325,11 @@ function flush() {
 }
 
 getList(props.defaultParams)
+
+defineExpose({
+  getList
+})
+
 
 </script>
 
