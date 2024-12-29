@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-modal title="创建用户" :visible="props.visible" :on-before-ok="createUser">
+    <a-modal title="创建用户" :visible="props.visible" :on-before-ok="createUser" @cancel="emits('update:visible', false)">
       <a-form ref="formRef" :model="form">
         <a-form-item field="user_name" label="用户名"
                      :rules="[{required:true,message:'请输入用户名'}]"
@@ -35,8 +35,7 @@
 </template>
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import {userCreateApi} from "@/api/user_api";
-import type {userCreateRequest} from "@/api/user_api";
+import {userCreateApi, userCreateRequest} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {roleOptions} from "@/global/global";
 
