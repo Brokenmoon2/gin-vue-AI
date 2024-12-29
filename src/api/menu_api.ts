@@ -39,6 +39,24 @@ export interface menuCreateRequest {
     title: string
 }
 
-export function menuCreateApi(data: menuCreateRequest):Promise<baseResponse<string>>{
+export function menuCreateApi(data: menuCreateRequest): Promise<baseResponse<string>> {
     return useAxios.post("/api/menus", data)
+}
+
+export function menuUpdateApi(id: number, data: menuCreateRequest): Promise<baseResponse<string>> {
+    return useAxios.put("/api/menus/" + id.toString(), data) // 确保路径是 /api/menus/:id
+}
+
+
+export const defaultMenuForm = {
+    abstract: [],
+    abstract_time: 7,
+    banner_time: 7,
+    image_sort_list: [],
+    path: "",
+    slogan: "",
+    sort: 1,
+    title: "",
+    abstractString: "",
+    imageIdList: []
 }

@@ -35,7 +35,8 @@
 </template>
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import {userCreateApi, userCreateRequest} from "@/api/user_api";
+import {userCreateApi} from "@/api/user_api";
+import type {userCreateRequest} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {roleOptions} from "@/global/global";
 

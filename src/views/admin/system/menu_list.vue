@@ -1,6 +1,6 @@
 <template>
   <div class="menu_list_view">
-    <menu_create v-model:visible="visible" @ok="gvbTable.getList()"></menu_create>
+    <menu_create v-model:visible="visible" @ok="gvbTable.getList()" :record="recordData"></menu_create>
     <gvb_table
         :url="menuListApi"
         :columns="columns"
@@ -12,7 +12,7 @@
         no-check
         no-action-group
         search-placeholder="搜索菜单名称"
-        @add="visible=true"
+        @add="add"
         @edit="edit">
       <template #banners="{record}:{record: menuType}">
         <div class="menu_column_image">
@@ -29,12 +29,23 @@
 <script setup lang="ts">
 import {menuListApi} from "@/api/menu_api";
 import Gvb_table from "@/components/admin/gvb_table.vue";
-import {ref} from "vue";
-import type {menuType} from "@/api/menu_api";
+import {reactive, ref} from "vue";
+import type {menuType, menuCreateRequest, bannerType} from "@/api/menu_api";
 import Menu_create from "@/components/admin/menu_create.vue";
+import {defaultMenuForm} from "@/api/menu_api";
 
 const gvbTable = ref()
-
+const recordData = reactive<menuCreateRequest & { banners: bannerType[], id?: number }>({
+  abstract: [],
+  abstract_time: 7,
+  banner_time: 7,
+  image_sort_list: [],
+  path: "",
+  slogan: "",
+  sort: 1,
+  title: "",
+  banners: []
+})
 const columns = [
   {title: '序号', dataIndex: 'sort'},
   {title: '菜单标题', dataIndex: 'title'},
@@ -51,9 +62,16 @@ const columns = [
 const visible = ref(false)
 
 function edit(record: menuType) {
-  console.log(record)
+  Object.assign(recordData, record)
+  visible.value = true
 }
 
+function add() {
+  Object.assign(recordData, defaultMenuForm)
+  recordData.id = undefined
+  recordData.banners = []
+  visible.value = true
+}
 
 </script>
 

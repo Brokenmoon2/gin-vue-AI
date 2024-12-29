@@ -1,6 +1,7 @@
 <template>
   <div>
-    <a-modal title="创建菜单" :visible="props.visible" @cancel="emits('update:visible', false)"
+    <a-modal :title="editId ? '编辑菜单': '创建菜单'" :visible="props.visible" @before-open="beforeOpen"
+             @cancel="emits('update:visible', false)"
              :on-before-ok="okHandler">
       <a-form ref="formRef" :model="form">
         <a-form-item field="title" label="菜单标题"
@@ -43,7 +44,7 @@
           </template>
         </a-form-item>
         <a-form-item label="banner图">
-          <a-select v-model="form.imageIdList" multiple placeholder="选择banner图">
+          <a-select v-model="form.imageIdList" multiple placeholder="选择banner图" allow-clear>
             <a-option v-for="item in imageIdList" :value="item.id" :key="item.id">
               <div class="banner_image_div">
                 <img height="40" :src="item.path" alt=""> {{ item.name }}
@@ -57,17 +58,20 @@
 </template>
 <script setup lang="ts">
 import {reactive, ref} from "vue";
-import type {imageIdSortList, menuCreateRequest} from "@/api/menu_api";
-import {menuCreateApi} from "@/api/menu_api";
+import type {imageIdSortList, menuCreateRequest, bannerType} from "@/api/menu_api";
+import {menuCreateApi, menuUpdateApi} from "@/api/menu_api";
 import {imageIdListApi} from "@/api/image_api";
 import type {imageIdType} from "@/api/image_api";
 import {Message} from "@arco-design/web-vue";
+import {defaultMenuForm} from "@/api/menu_api";
+import type {baseResponse} from "@/api";
 
-const props = defineProps({
-  visible: {
-    type: Boolean,
-  }
-})
+interface Props {
+  visible: boolean
+  record: menuCreateRequest & { banners: bannerType[], id?: number }
+}
+
+const props = defineProps<Props>()
 
 const imageIdList = ref<imageIdType[]>([])
 
@@ -79,18 +83,7 @@ async function getList() {
 getList()
 
 const emits = defineEmits(["update:visible", "ok"])
-const defaultForm = {
-  abstract: [],
-  abstract_time: 7,
-  banner_time: 7,
-  image_sort_list: [],
-  path: "",
-  slogan: "",
-  sort: 1,
-  title: "",
-  abstractString: "",
-  imageIdList: []
-}
+
 
 const form = reactive<menuCreateRequest & { abstractString: string, imageIdList: number[] }>({
   abstract: [],
@@ -104,6 +97,22 @@ const form = reactive<menuCreateRequest & { abstractString: string, imageIdList:
   abstractString: "",
   imageIdList: []
 })
+
+
+const editId = ref<number | undefined>(undefined)
+
+function beforeOpen() {
+  Object.assign(form, props.record)
+  // abs
+  form.abstractString = props.record.abstract.join("\n")
+  // banner
+  const imageIdList: number[] = []
+  for (const banner of props.record.banners) {
+    imageIdList.push(banner.id)
+  }
+  form.imageIdList = imageIdList
+  editId.value = props.record.id
+}
 
 const formRef = ref()
 
@@ -120,15 +129,22 @@ async function okHandler() {
     })
   }
   form.image_sort_list = imageSortIdList
-  let res = await menuCreateApi(form)
+  let res: baseResponse<string> = {}
+  if (editId.value) {
+    res = await menuUpdateApi(editId.value, form)
+  } else {
+    res = await menuCreateApi(form)
+  }
   if (res.code) {
     Message.error(res.msg)
     return
   }
-  Object.assign(form, defaultForm)
+  Message.success(res.msg)
+  Object.assign(form, defaultMenuForm)
   emits("update:visible", false)
   emits("ok")
 }
+
 
 </script>
 <style lang="scss">
