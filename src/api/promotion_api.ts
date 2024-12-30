@@ -23,6 +23,7 @@ export interface promotionCreateType {
     images: string
     is_show: boolean
     title: string
+    id?: number
 }
 
 export const defaultPromotionForm = {

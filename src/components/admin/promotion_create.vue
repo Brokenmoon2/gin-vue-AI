@@ -19,7 +19,7 @@
         <a-form-item field="images" label="图片链接"
                      :rules="[{required:true,message:'请输入图片链接'}]"
                      :validate-trigger="['blur']">
-          <a-input v-model="form.images" placeholder="图片链接"></a-input>
+          <Gvb_upload_image v-model="form.images"></Gvb_upload_image>
         </a-form-item>
         <a-form-item label="是否显示">
           <a-switch v-model="form.is_show"></a-switch>
@@ -31,14 +31,15 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
 import {promotionCreateApi, promotionUpdateApi} from "@/api/promotion_api";
-import type {promotionCreateType, promotionType} from "@/api/promotion_api";
+import type {promotionCreateType} from "@/api/promotion_api";
 import {Message} from "@arco-design/web-vue";
 import {defaultPromotionForm} from "@/api/promotion_api";
 import type {baseResponse} from "@/api";
+import Gvb_upload_image from "@/components/common/gvb_upload_image.vue";
 
 interface Props {
   visible: boolean
-  record: promotionType
+  record: promotionCreateType
 }
 
 const props = defineProps<Props>()

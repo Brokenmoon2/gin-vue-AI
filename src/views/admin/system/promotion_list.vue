@@ -49,7 +49,7 @@ const columns = [
 
 const visible = ref(false)
 
-const recordData = reactive<promotionType>({
+const recordData = reactive<promotionCreateType>({
   href: "",
   images: "",
   is_show: false,
