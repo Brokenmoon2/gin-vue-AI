@@ -129,7 +129,7 @@ async function okHandler() {
     })
   }
   form.image_sort_list = imageSortIdList
-  let res: baseResponse<string> = {}
+  let res: baseResponse<string>
   if (editId.value) {
     res = await menuUpdateApi(editId.value, form)
   } else {

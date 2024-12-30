@@ -297,7 +297,6 @@ const params = reactive<paramsType>({
 const isLoading = ref(false)
 
 async function getList(p?: paramsType & any) {
-  console.log(p)
   if (p) {
     Object.assign(params, p)
   }
