@@ -326,8 +326,15 @@ function flush() {
 
 getList(props.defaultParams)
 
+function clearData(){
+  data.list = []
+  data.count = 0
+}
+
+
 defineExpose({
-  getList
+  getList,
+  clearData,
 })
 
 
