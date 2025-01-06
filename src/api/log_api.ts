@@ -15,7 +15,7 @@ export interface logRequest extends paramsType {
 export type logLevel = "info" | "warning" | "error"
 
 export interface logType {
-    readonly id: string
+    readonly id: number
     created_at: string
     updated_at: string
     ip: string
