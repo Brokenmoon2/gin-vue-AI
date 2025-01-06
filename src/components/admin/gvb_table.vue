@@ -303,6 +303,10 @@ async function getList(p?: paramsType & any) {
   isLoading.value = true
   let res = await props.url(params)
   isLoading.value = false
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
   data.list = res.data.list
   data.count = res.data.count
 }
