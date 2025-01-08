@@ -43,12 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import type {articleItemType} from "@/api/article_api";
 import {dateFormat} from "@/utils/date";
 import {IconClockCircle} from "@arco-design/web-vue/es/icon";
+import type {articleUpdateType, articleDataType} from "@/api/article_api";
 
 interface Props {
-  data: articleItemType,
+  data: articleUpdateType & articleDataType,
 }
 
 const props = defineProps<Props>()

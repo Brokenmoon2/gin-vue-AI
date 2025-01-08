@@ -68,7 +68,7 @@ export interface articleUpdateType {
     banner_id?: number
     category?: string
     content?: string
-    id: string
+    id?: string
     link?: string
     source?: string
     tags?: string[]
@@ -79,4 +79,9 @@ export interface articleUpdateType {
 
 export function articleUpdateApi(data: articleUpdateType): Promise<baseResponse<string>> {
     return useAxios.put("/api/articles", data)
+}
+
+
+export function articleCreateApi(data: articleUpdateType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/articles", data)
 }

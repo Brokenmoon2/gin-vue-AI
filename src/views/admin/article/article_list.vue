@@ -1,6 +1,7 @@
 <template>
   <div class="article_list_view">
     <gvb_article_update v-model:visible="updateVisible" :data="recordData" @ok="getList"></gvb_article_update>
+    <gvb_article_drawer v-model:visible="createVisible" @ok="getList"></gvb_article_drawer>
     <gvb_table
         :url="articleListApi"
         :columns="columns"
@@ -10,6 +11,7 @@
         :filter-group="filterGroup"
         ref="gvbTable"
         @edit="editArticleInfo"
+        @add="createVisible = true"
         search-placeholder="搜索文章标题">
       <template #banner_url="{record}:{record: articleType}">
         <a-image :src="record.banner_url" height="50px" style="border-radius: 5px"></a-image>
@@ -50,16 +52,15 @@
 import Gvb_table from "@/components/admin/gvb_table.vue";
 import type {RecordType} from "@/components/admin/gvb_table.vue";
 import {h, reactive, ref} from "vue";
-import {Message, Tag} from "@arco-design/web-vue";
 import {articleListApi} from "@/api/article_api";
 import type {articleType, articleUpdateType} from "@/api/article_api";
-import {Random} from "mockjs";
 import type {filterOptionType} from "@/components/admin/gvb_table.vue";
 import {articleCategoryListApi} from "@/api/article_api";
 import {tagOptionsApi} from "@/api/tag_api";
 import Gvb_article_update from "@/components/common/gvb_article_update.vue";
-
+import Gvb_article_drawer from "@/components/common/gvb_article_drawer.vue";
 const gvbTable = ref()
+
 
 const colorList = [
   'red',
@@ -124,6 +125,10 @@ function editArticleInfo(record: articleType) {
 function getList() {
   gvbTable.value.getList()
 }
+
+const createVisible = ref(false)
+
+
 
 </script>
 

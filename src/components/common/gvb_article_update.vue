@@ -2,11 +2,11 @@
   <div>
     <a-modal
         width="30%"
-        title="文章更新"
+        :title="title"
         modal-class="gvb_article_modal_body"
-        :visible="props.visible" @cancel="closeModal"
+        :visible="props.visible" @cancel="emits('update:visible', false)"
         :on-before-ok="okHandler">
-      <a-form ref="formRef" :model="form">
+      <a-form ref="formRef" :model="form" :label-col-props="{span:4}" :wrapper-col-props="{span: 20}">
         <a-form-item field="title" label="文章标题" :rules="[{required:true,message:'请输入文章标题'}]"
                      :validate-trigger="['blur']">
           <a-input v-model="form.title" placeholder="文章标题"></a-input>
@@ -27,7 +27,12 @@
                 <img height="40" :src="item.path" alt=""> {{ item.name }}
               </div>
             </a-option>
+            <template #label="{ data }">
+              <img :src="coverSrc(data.value).value" style="height: 30px; border-radius: 5px"/>
+              <span style="margin-left: 10px">{{ data.label }}</span>
+            </template>
           </a-select>
+          <a-button type="outline" style="margin-left: 10px" @click="randomCover">随机</a-button>
         </a-form-item>
         <a-form-item label="原文地址">
           <a-input v-model="form.link" placeholder="原文地址"></a-input>
@@ -35,102 +40,124 @@
         <a-form-item label="文章来源">
           <a-input v-model="form.source" placeholder="文章来源"></a-input>
         </a-form-item>
-        <a-form-item label="预览" content-class="preview_body">
+        <a-form-item label="预览" v-if="form.title && form.banner_url && form.category" content-class="preview_body">
           <Gvb_article_item :data="form"></Gvb_article_item>
         </a-form-item>
       </a-form>
     </a-modal>
   </div>
 </template>
-
 <script setup lang="ts">
-// 1. 首先定义 props 和 emits
-const props = defineProps<{
-  visible: boolean;
-  data: articleUpdateType;
-}>()
-
-const emits = defineEmits(["update:visible", "ok"])
-
-// 2. 使用 ref 和 reactive 来定义响应式数据
-import { reactive, ref, watch } from "vue";
-import type { articleDataType, articleUpdateType } from "@/api/article_api";
-import { articleCategoryListApi, articleUpdateApi } from "@/api/article_api";
-import { tagOptionsApi } from "@/api/tag_api";
-import { imageIdListApi } from "@/api/image_api";
-import type { optionType, imageIdType } from "@/types";
-import { Message } from "@arco-design/web-vue";
+import {reactive, ref, watch} from "vue";
+import type {articleDataType, articleUpdateType} from "@/api/article_api";
+import {articleCategoryListApi} from "@/api/article_api";
+import {tagOptionsApi} from "@/api/tag_api";
+import type {optionType} from "@/types";
+import {imageIdListApi} from "@/api/image_api";
+import type {imageIdType} from "@/api/image_api";
+import {articleUpdateApi} from "@/api/article_api";
+import {Message} from "@arco-design/web-vue";
 import Gvb_article_item from "@/components/common/gvb_article_item.vue";
-import { Random } from "mockjs";
+import {Random} from "mockjs";
+import {computed} from "vue";
 
-// 定义响应式数据
-const form = reactive<articleUpdateType & articleDataType>({
-  id: "",
-  collects_count: Random.integer(0, 100),
-  comment_count: Random.integer(0, 100),
-  created_at: new Date(),
-  digg_count: Random.integer(0, 100),
-  look_count: Random.integer(0, 100),
-})
 
-// 3. 监听 props.data 变化，更新 form 数据
-watch(() => props.data, () => {
-  Object.assign(form, props.data)
-}, { deep: true })
-
-// 4. 定义响应式数据和获取分类、标签、图片等数据的异步函数
 const categoryOptions = ref<optionType[]>([])
 const tagOptions = ref<optionType[]>([])
-const imageIdList = ref<imageIdType[]>([])
 
 async function getArticleCategory() {
   let res = await articleCategoryListApi()
   categoryOptions.value = res.data
 }
 
+getArticleCategory()
+
 async function getTags() {
   let res = await tagOptionsApi()
   tagOptions.value = res.data
 }
 
-async function getImageList() {
+getTags()
+
+const imageIdList = ref<imageIdType[]>([])
+
+async function getList() {
   let res = await imageIdListApi()
   imageIdList.value = res.data
 }
 
-// 获取数据
-getArticleCategory()
-getTags()
-getImageList()
+getList()
 
-// 5. banner 选择变化时，更新 form.banner_url
-function bannerChange(val: number) {
-  const image = imageIdList.value.find((item) => item.id === val)
-  form.banner_url = image?.path || ""
+function bannerChange(val: any) {
+  const image  = imageIdList.value.find((item) => item.id === val)
+  form.banner_url = (image as imageIdType).path
 }
 
-// 6. 确认按钮点击处理函数
+
+interface Props {
+  visible: boolean
+  data: articleUpdateType
+  title?: string
+  type?: "add" | "update"
+}
+
+const props = defineProps<Props>()
+const {title = "文章更新", type = "update"} = props
+
+const form = reactive<articleUpdateType & articleDataType>({
+  id: "",
+  collects_count: Random.integer(0, 100),
+  comment_count: Random.integer(0, 100),
+  created_at: new Date().toDateString(),
+  digg_count: Random.integer(0, 100),
+  look_count: Random.integer(0, 100),
+})
+
+watch(() => props.data, () => {
+  Object.assign(form, props.data)
+
+}, {deep: true, immediate: true})
+
+
+const emits = defineEmits(["update:visible", "ok"])
+
 const formRef = ref()
+
+const coverSrc = (value: number) => {
+  return computed((): string => {
+    return (imageIdList.value.find((item) => item.id === value) as imageIdType).path
+  })
+}
+
+function randomCover() {
+  const image: imageIdType = Random.pick(imageIdList.value)
+  form.banner_id = image.id
+  form.banner_url = image.path
+}
+
 
 async function okHandler() {
   let v = await formRef.value.validate()
   if (v) return
-  let res = await articleUpdateApi(form)
-  if (res.code) {
-    Message.error(res.msg)
-    return
+  if (type === "update") {
+    let res = await articleUpdateApi(form)
+    if (res.code) {
+      Message.error(res.msg)
+      return
+    }
+    Message.success(res.msg)
+    emits("update:visible", false)
+    emits("ok")
   }
-  Message.success(res.msg)
-  emits("update:visible", false)
-  emits("ok")
+  if (type === "add") {
+    emits("update:visible", false)
+    emits("ok", form)
+  }
+
 }
 
-// 7. 关闭 modal 函数
-function closeModal() {
-  emits("update:visible", false)
-}
+
 </script>
-
 <style lang="scss">
 .banner_image_div {
   display: flex;
