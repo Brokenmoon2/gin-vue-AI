@@ -9,9 +9,9 @@
                   v-model="actionValue"></a-select>
 
         <a-popconfirm content="是否确认执行此操作?" v-if="!props.noConfirm" @ok="actionMethod">
-          <a-button type="primary" status="danger" v-if="actionValue !== undefined">执行</a-button>
+          <a-button type="primary" status="danger" v-if="actionValue !== undefined && actionValue !== ''">执行</a-button>
         </a-popconfirm>
-        <a-button v-else type="primary" status="danger" v-if="actionValue !== undefined" @click="actionMethod">执行
+        <a-button v-else type="primary" status="danger" v-if="actionValue !== undefined && actionValue !== ''" @click="actionMethod">执行
         </a-button>
 
       </div>
@@ -176,9 +176,12 @@ function initActionGroup() {
 }
 
 initActionGroup()
-const actionValue = ref<number | undefined>(undefined)
+const actionValue = ref<number | undefined| "">(undefined)
 
 function actionMethod() {
+  if (actionValue.value === ""){
+    return;
+  }
   // 判断是不是1
   if (actionValue.value === 0) {
     // 批量删除
@@ -274,6 +277,7 @@ async function removeIdData(idList: (number | string)[]) {
       return
     }
     Message.success(res.msg)
+    selectedKeys.value = []
     getList()
     return;
   }
