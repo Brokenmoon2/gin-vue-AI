@@ -1,5 +1,6 @@
-import {useAxios} from "@/api/index";
+import {cacheRequest, useAxios} from "@/api/index";
 import type {baseResponse, listDataType, paramsType} from "@/api/index";
+import type {optionType} from "@/types";
 
 export interface imageIdType {
     id: number
@@ -8,9 +9,11 @@ export interface imageIdType {
 }
 
 
-export function imageIdListApi(): Promise<baseResponse<imageIdType[]>> {
-    return useAxios.get("/api/image_names")
-}
+// export function imageIdListApi(): Promise<baseResponse<imageIdType[]>> {
+//     return useAxios.get("/api/image_names")
+// }
+
+export const imageIdListApi: () => Promise<baseResponse<imageIdType[]>> = cacheRequest(() => useAxios.get("/api/image_names"))
 
 export interface imageType {
     id: number

@@ -1,6 +1,7 @@
 import type {baseResponse, listDataType, paramsType} from "@/api/index";
 import {useAxios} from "@/api/index";
 import type {optionType} from "@/types";
+import {cacheRequest} from "@/api/index";
 
 export interface articleType {
     abstract: string
@@ -58,9 +59,11 @@ export function articleListApi(params: paramsType): Promise<baseResponse<listDat
 }
 
 
-export function articleCategoryListApi(): Promise<baseResponse<optionType[]>> {
-    return useAxios.get("/api/categorys")
-}
+// export function articleCategoryListApi(): Promise<baseResponse<optionType[]>> {
+//     return useAxios.get("/api/categorys")
+// }
+
+export const articleCategoryListApi: () => Promise<baseResponse<optionType[]>> = cacheRequest(() => useAxios.get("/api/categorys"))
 
 
 export interface articleUpdateType {
@@ -84,4 +87,9 @@ export function articleUpdateApi(data: articleUpdateType): Promise<baseResponse<
 
 export function articleCreateApi(data: articleUpdateType): Promise<baseResponse<string>> {
     return useAxios.post("/api/articles", data)
+}
+
+
+export function articleContentApi(id: string): Promise<baseResponse<string>> {
+    return useAxios.get("/api/articles/content/" + id)
 }

@@ -2,7 +2,8 @@
   <div class="article_list_view">
     <gvb_article_update v-model:visible="updateVisible" :data="recordData" @ok="getList"></gvb_article_update>
     <gvb_article_drawer v-model:visible="createVisible" @ok="getList"></gvb_article_drawer>
-    <Gvb_article_content_drawer v-model:visible="articleContentVisible" :id="articleUpdateId"></Gvb_article_content_drawer>
+    <Gvb_article_content_drawer v-model:visible="articleContentVisible"
+                                :id="articleUpdateId"></Gvb_article_content_drawer>
     <gvb_table
         :url="articleListApi"
         :columns="columns"
@@ -11,6 +12,7 @@
         no-confirm
         :filter-group="filterGroup"
         ref="gvbTable"
+        :default-params="params"
         @edit="editArticleInfo"
         @add="createVisible = true"
         search-placeholder="搜索文章标题">
@@ -64,6 +66,15 @@ import {tagOptionsApi} from "@/api/tag_api";
 import Gvb_article_update from "@/components/common/gvb_article_update.vue";
 import Gvb_article_drawer from "@/components/common/gvb_article_drawer.vue";
 import Gvb_article_content_drawer from "@/components/common/gvb_article_content_drawer.vue";
+import type {paramsType} from "@/api";
+
+interface Props {
+  isUser: boolean
+}
+
+const props = defineProps<Props>()
+
+const {isUser = false} = props
 
 const gvbTable = ref()
 
@@ -84,7 +95,9 @@ const colorList = [
   'gray'
 ]
 
-
+const params = reactive<paramsType & { is_user: boolean }>({
+  is_user: isUser
+})
 const filterGroup: filterOptionType[] = [
   {
     label: "文章分类",
