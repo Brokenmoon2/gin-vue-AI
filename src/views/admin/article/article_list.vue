@@ -1,5 +1,6 @@
 <template>
   <div class="article_list_view">
+    <gvb_article_update v-model:visible="updateVisible" :data="recordData" @ok="getList"></gvb_article_update>
     <gvb_table
         :url="articleListApi"
         :columns="columns"
@@ -8,6 +9,7 @@
         no-confirm
         :filter-group="filterGroup"
         ref="gvbTable"
+        @edit="editArticleInfo"
         search-placeholder="搜索文章标题">
       <template #banner_url="{record}:{record: articleType}">
         <a-image :src="record.banner_url" height="50px" style="border-radius: 5px"></a-image>
@@ -47,14 +49,15 @@
 <script setup lang="ts">
 import Gvb_table from "@/components/admin/gvb_table.vue";
 import type {RecordType} from "@/components/admin/gvb_table.vue";
-import {h, ref} from "vue";
+import {h, reactive, ref} from "vue";
 import {Message, Tag} from "@arco-design/web-vue";
 import {articleListApi} from "@/api/article_api";
-import type {articleType} from "@/api/article_api";
+import type {articleType, articleUpdateType} from "@/api/article_api";
 import {Random} from "mockjs";
 import type {filterOptionType} from "@/components/admin/gvb_table.vue";
-import {articleCategoryList} from "@/api/article_api";
+import {articleCategoryListApi} from "@/api/article_api";
 import {tagOptionsApi} from "@/api/tag_api";
+import Gvb_article_update from "@/components/common/gvb_article_update.vue";
 
 const gvbTable = ref()
 
@@ -79,7 +82,7 @@ const filterGroup: filterOptionType[] = [
   {
     label: "文章分类",
     column: "category",
-    source: articleCategoryList,
+    source: articleCategoryListApi,
   },
   {
     label: "文章标签",
@@ -96,9 +99,31 @@ const columns = [
   {title: '作者', dataIndex: 'user_nick_name'},
   {title: '标签', slotName: 'tags'},
   {title: '文章数据', slotName: 'data'},
-  {title: '上传时间', slotName: 'created_at'},
+  {title: '发布时间', slotName: 'created_at'},
   {title: '操作', slotName: 'action'},
 ]
+
+const updateVisible = ref(false)
+const recordData = reactive<articleUpdateType>({
+  id: ""
+})
+
+function editArticleInfo(record: articleType) {
+  updateVisible.value = true
+  recordData.abstract = record.abstract
+  recordData.banner_id = record.banner_id
+  recordData.category = record.category
+  recordData.id = record.id
+  recordData.link = record.link
+  recordData.source = record.source
+  recordData.tags = record.tags
+  recordData.title = record.title
+  recordData.banner_url = record.banner_url
+}
+
+function getList() {
+  gvbTable.value.getList()
+}
 
 </script>
 
@@ -127,8 +152,9 @@ const columns = [
       @include marginRight(5px);
     }
   }
-  .article_title_col{
-    em{
+
+  .article_title_col {
+    em {
       color: rgb(var(--red-6));
     }
   }
