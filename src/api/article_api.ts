@@ -93,3 +93,7 @@ export function articleCreateApi(data: articleUpdateType): Promise<baseResponse<
 export function articleContentApi(id: string): Promise<baseResponse<string>> {
     return useAxios.get("/api/articles/content/" + id)
 }
+
+export function articleCollectsApi(params: paramsType): Promise<baseResponse<listDataType<articleType>>> {
+    return useAxios.get("/api/articles/collects", {params: params})
+}

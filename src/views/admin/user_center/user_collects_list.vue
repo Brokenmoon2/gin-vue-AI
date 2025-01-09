@@ -1,20 +1,14 @@
 <template>
   <div class="article_list_view">
-    <gvb_article_update v-model:visible="updateVisible" :data="recordData" @ok="getList"></gvb_article_update>
-    <gvb_article_drawer v-model:visible="createVisible" @ok="getList"></gvb_article_drawer>
-    <Gvb_article_content_drawer v-model:visible="articleContentVisible"
-                                :id="articleUpdateId"></Gvb_article_content_drawer>
     <gvb_table
-        :url="articleListApi"
+        :url="articleCollectsApi"
         :columns="columns"
         default-delete
-        add-label="发布文章"
         no-confirm
+        no-add
+        no-edit
         :filter-group="filterGroup"
         ref="gvbTable"
-        :default-params="params"
-        @edit="editArticleInfo"
-        @add="createVisible = true"
         search-placeholder="搜索文章标题">
       <template #banner_url="{record}:{record: articleType}">
         <a-image :src="record.banner_url" height="50px" style="border-radius: 5px"></a-image>
@@ -47,9 +41,6 @@
       <template #title="{record}:{record: articleType}">
         <div class="article_title_col" v-html="record.title"></div>
       </template>
-      <template #action_middle="{record}:{record: articleType}">
-        <a-button type="outline" @click="editArticleContent(record)">编辑正文</a-button>
-      </template>
     </gvb_table>
   </div>
 </template>
@@ -57,24 +48,12 @@
 <script setup lang="ts">
 import Gvb_table from "@/components/admin/gvb_table.vue";
 import type {RecordType} from "@/components/admin/gvb_table.vue";
-import {h, reactive, ref} from "vue";
-import {articleListApi} from "@/api/article_api";
-import type {articleType, articleUpdateType} from "@/api/article_api";
+import {ref} from "vue";
+import type {articleType} from "@/api/article_api";
 import type {filterOptionType} from "@/components/admin/gvb_table.vue";
 import {articleCategoryListApi} from "@/api/article_api";
 import {tagOptionsApi} from "@/api/tag_api";
-import Gvb_article_update from "@/components/common/gvb_article_update.vue";
-import Gvb_article_drawer from "@/components/common/gvb_article_drawer.vue";
-import Gvb_article_content_drawer from "@/components/common/gvb_article_content_drawer.vue";
-import type {paramsType} from "@/api";
-
-interface Props {
-  isUser?: boolean
-}
-
-const props = defineProps<Props>()
-
-const {isUser = false} = props
+import {articleCollectsApi} from "@/api/article_api";
 
 const gvbTable = ref()
 
@@ -95,9 +74,7 @@ const colorList = [
   'gray'
 ]
 
-const params = reactive<paramsType & { is_user: boolean }>({
-  is_user: isUser
-})
+
 const filterGroup: filterOptionType[] = [
   {
     label: "文章分类",
@@ -119,40 +96,9 @@ const columns = [
   {title: '作者', dataIndex: 'user_nick_name'},
   {title: '标签', slotName: 'tags'},
   {title: '文章数据', slotName: 'data'},
-  {title: '发布时间', slotName: 'created_at'},
+  {title: '收藏时间', slotName: 'created_at'},
   {title: '操作', slotName: 'action'},
 ]
-
-const updateVisible = ref(false)
-const recordData = reactive<articleUpdateType>({
-  id: ""
-})
-
-function editArticleInfo(record: articleType) {
-  updateVisible.value = true
-  recordData.abstract = record.abstract
-  recordData.banner_id = record.banner_id
-  recordData.category = record.category
-  recordData.id = record.id
-  recordData.link = record.link
-  recordData.source = record.source
-  recordData.tags = record.tags
-  recordData.title = record.title
-  recordData.banner_url = record.banner_url
-}
-
-function getList() {
-  gvbTable.value.getList()
-}
-
-const createVisible = ref(false)
-const articleContentVisible = ref(false)
-const articleUpdateId = ref<string | undefined>(undefined)
-
-function editArticleContent(record: articleType) {
-  articleContentVisible.value = true
-  articleUpdateId.value = record.id
-}
 
 
 </script>
