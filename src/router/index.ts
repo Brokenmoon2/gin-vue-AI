@@ -70,6 +70,14 @@ const router = createRouter({
                                 title: "我的收藏"
                             },
                             component: () => import('../views/admin/user_center/user_collects_list.vue'),
+                        },
+                        {
+                            path: "messages",
+                            name: "messages",
+                            meta: {
+                                title: "我的消息"
+                            },
+                            component: () => import('../views/admin/user_center/user_message_list.vue'),
                         }
                     ]
                 },
