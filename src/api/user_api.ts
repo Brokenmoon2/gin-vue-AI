@@ -35,7 +35,7 @@ export interface userInfoType {
     ip: string
     role: string
     role_id: number
-    sign_status: string,
+    sign_status: "QQ" | "gitee" | "邮箱"
     integral: number // 积分
     sign: string // slogan
     link: string // 跳转链接
@@ -67,6 +67,38 @@ export interface userUpdateRequest {
     role: number
     user_id: number
 }
-export function userUpdateApi(data:userUpdateRequest): Promise<baseResponse<string>> {
+
+export function userUpdateApi(data: userUpdateRequest): Promise<baseResponse<string>> {
     return useAxios.put("/api/user_role", data)
+}
+
+export interface userInfoUpdateType {
+    link: string
+    nick_name: string
+    sign: string
+}
+
+export function userInfoUpdateApi(data: userInfoUpdateType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user_info", data)
+}
+
+export interface userUpdatePasswordType {
+    old_pwd: string
+    pwd: string
+
+    re_pwd: string
+}
+
+export function userUpdatePasswordApi(data: userUpdatePasswordType): Promise<baseResponse<string>> {
+    return useAxios.put("/api/user_password", data)
+}
+
+export interface userBindEmailType {
+    code?: string
+    email: string
+    password?: string
+}
+
+export function userBindEmailApi(data: userBindEmailType): Promise<baseResponse<string>> {
+    return useAxios.post("/api/user_bind_email", data)
 }

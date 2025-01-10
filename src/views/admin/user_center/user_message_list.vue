@@ -53,7 +53,6 @@ async function messageUserCheck(data: messageType) {
 
   .user_menu {
     width: 280px;
-    margin-left: 20px;
     padding: 20px;
   }
 
