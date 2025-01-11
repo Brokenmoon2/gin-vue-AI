@@ -37,6 +37,7 @@ export interface userInfoType {
     role_id: number
     sign_status: "QQ" | "gitee" | "邮箱"
     integral: number // 积分
+    scope: number // 积分
     sign: string // slogan
     link: string // 跳转链接
 }

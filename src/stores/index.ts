@@ -82,6 +82,10 @@ export const useStore = defineStore('counter', {
 
             localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
         },
+        setUserInfo(key: "nick_name" | "avatar", val: string) {
+            this.userInfo[key] = val
+            localStorage.setItem("userInfo", JSON.stringify(this.userInfo))
+        },
         loadToken() {
             let val = localStorage.getItem("userInfo")
             if (val === null) {
@@ -123,6 +127,9 @@ export const useStore = defineStore('counter', {
         // 判断是不是管理员
         isAdmin(): boolean {
             return this.userInfo.role == 1
+        },
+        isGeneral(): boolean {
+            return this.userInfo.role == 2
         },
         // 判断是不是游客
         isTourist(): boolean {
