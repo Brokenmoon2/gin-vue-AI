@@ -2,7 +2,7 @@
   <div class="home_view">
     <div class="welcome">
       <div class="title">
-        早安，xxxx，请开始一天的工作吧
+        早安，{{ store.userInfo.nick_name }}，请开始一天的工作吧
       </div>
       <div class="weather">
         今日晴，0℃ - 10℃，天气寒冷，注意添加衣物。
@@ -12,36 +12,39 @@
           <span class="icon">
             <IconMessage></IconMessage>
           </span>
-          在线流量：2333
+          在线流量：{{ statisticsData.flow_count }}
         </span>
         <span>
            <span class="icon">
             <IconMessage></IconMessage>
           </span>
-          用户总数：2333
+          用户总数：{{ statisticsData.user_count }}
         </span>
         <span>
            <span class="icon">
             <IconMessage></IconMessage>
           </span>
-          文章总数：2333
+          文章总数：{{ statisticsData.article_count }}
         </span>
         <span>
            <span class="icon">
             <IconMessage></IconMessage>
           </span>
-          群聊消息：2333
+          群聊消息：{{ statisticsData.chat_group_count }}
         </span>
         <span>
            <span class="icon">
             <IconMessage></IconMessage>
           </span>
-          今日登录：2333
+          今日登录：{{ statisticsData.now_login_count }}
         </span>
       </div>
       <div class="link">
         <div>
           <span>前端教程：<a href="https://www.bilibili.com/video/BV1V94y1Y725">https://www.bilibili.com/video/BV1V94y1Y725</a></span>
+        </div>
+        <div>
+          <span>后端教程：<a href="https://www.bilibili.com/video/BV1f24y1G72C">https://www.bilibili.com/video/BV1f24y1G72C</a></span>
         </div>
       </div>
     </div>
@@ -56,7 +59,7 @@
           </div>
         </gvb_card>
         <gvb_card class="statistics" title="数据统计">
-          <div id="login_data"></div>
+          <login_data_charts></login_data_charts>
         </gvb_card>
       </div>
       <div class="right">
@@ -86,9 +89,31 @@ import type {Component} from "vue";
 import {IconSettings} from "@arco-design/web-vue/es/icon";
 import router from "@/router";
 import {relativeCurrentTime} from "@/utils/date";
-import {onMounted} from "vue";
-import * as echarts from "echarts"
-import type {EChartsOption} from "echarts";
+import Login_data_charts from "@/components/charts/login_data_charts.vue";
+import {statisticsApi} from "@/api/data_api";
+import type {statisticsType} from "@/api/data_api";
+import {reactive} from "vue";
+import {useStore} from "@/stores";
+
+
+const store = useStore()
+
+const statisticsData = reactive<statisticsType>({
+  article_count: 0,
+  chat_group_count: 0,
+  flow_count: 0,
+  message_count: 0,
+  now_login_count: 0,
+  now_sign_count: 0,
+  user_count: 0,
+})
+
+async function getData() {
+  let res = await statisticsApi()
+  Object.assign(statisticsData, res.data)
+}
+
+getData()
 
 interface quickEntryType {
   bg: string // 背景色
@@ -147,74 +172,6 @@ const updateLogList: updateLogType[] = [
   }
 ]
 
-onMounted(() => {
-  const chartDom = document.getElementById('login_data')!;
-  const myChart = echarts.init(chartDom);
-  let option: EChartsOption;
-
-  option = {
-    title: {
-      text: '用户数据'
-    },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross',
-        label: {
-          backgroundColor: '#6a7985'
-        }
-      }
-    },
-    legend: {
-      data: ['登录', '注册',]
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: [
-      {
-        type: 'category',
-        boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
-    series: [
-      {
-        name: '登录',
-        type: 'line',
-        stack: 'Total',
-        areaStyle: {},
-        smooth: true,
-        emphasis: {
-          focus: 'series'
-        },
-        data: [120, 132, 101, 134, 90, 230, 210]
-      },
-      {
-        name: '注册',
-        type: 'line',
-        stack: 'Total',
-        areaStyle: {},
-        smooth: true,
-        emphasis: {
-          focus: 'series'
-        },
-        data: [220, 182, 191, 234, 290, 330, 310]
-      },
-    ]
-  };
-
-  option && myChart.setOption(option);
-})
-
 
 </script>
 
@@ -252,6 +209,14 @@ onMounted(() => {
 
     .link {
       margin: 30px 0 20px 0;
+
+      > div {
+        margin-bottom: 20px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
 
       a {
         text-decoration: none;
@@ -318,10 +283,6 @@ onMounted(() => {
 
       .statistics {
         margin-top: 20px;
-
-        #login_data {
-          height: 300px;
-        }
       }
     }
 
