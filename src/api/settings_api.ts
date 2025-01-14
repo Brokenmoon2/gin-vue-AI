@@ -1,5 +1,6 @@
 import type {baseResponse, listDataType} from "@/api/index";
 import {useAxios} from "@/api/index";
+import type {chatGroupConfigType} from "@/api/chat_api";
 
 
 export interface siteInfoType {
@@ -64,9 +65,9 @@ export interface qiniuType {
     size: number
 }
 
-export type settingsName = "qq" | "email" | "qiniu" | "jwt"
+export type settingsName = "qq" | "email" | "qiniu" | "jwt" | "chat_group"
 
-export type settingsType = emailType | qqType | jwtType | qiniuType
+export type settingsType = emailType | qqType | jwtType | qiniuType | chatGroupConfigType
 
 export function settingsInfoApi<T extends settingsType>(name: settingsName): Promise<baseResponse<T>> {
     return useAxios.get("/api/settings/" + name.toString())
