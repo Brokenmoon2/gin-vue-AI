@@ -14,6 +14,7 @@ export interface messageType {
 }
 
 export interface messageRecordType {
+    id: number
     content: string
     created_at: string
     message_count: number
@@ -39,7 +40,6 @@ export function messageUserRecordApi(sendUserID: number, revUserID: number): Pro
     return useAxios.get("/api/message_users/record", {params: {sendUserID, revUserID}})
 }
 
-
 // 我的消息列表
 export function messageUserListByMeApi(): Promise<baseResponse<listDataType<messageType>>> {
     return useAxios.get("/api/message_users/me",)
@@ -60,4 +60,8 @@ export interface messagePublishType{
 }
 export function messagePublishApi(data: messagePublishType):Promise<baseResponse<string>>{
     return  useAxios.post("/api/messages", data)
+}
+
+export function messageRemoveApi(id_list: number[]): Promise<baseResponse<string>> {
+    return useAxios.delete("/api/message_users", {data: {id_list}})
 }

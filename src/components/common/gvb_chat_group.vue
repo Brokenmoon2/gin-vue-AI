@@ -37,8 +37,6 @@
                         <template v-else>
                           <MdPreview :theme="store.themeString" v-model="item.content" :editorId="'md__'+item.id"></MdPreview>
                         </template>
-
-
                       </div>
                     </div>
                   </div>
@@ -84,8 +82,7 @@
 <script setup lang="ts">
 import {nextTick, reactive, ref} from "vue";
 import type {listDataType} from "@/api";
-import {chatRecordApi, chatRemoveApi} from "@/api/chat_api";
-import type {chatMessageType} from "@/api/chat_api";
+import {chatMessageType, chatRecordApi, chatRemoveApi} from "@/api/chat_api";
 import type {chatType} from "@/api/chat_api";
 import type {paramsType} from "@/api";
 import {Message} from "@arco-design/web-vue";
@@ -120,9 +117,7 @@ const config = reactive<chatGroupConfigType>({
   welcomeTitle: "【枫枫知道】在线聊天室",
   isOnlinePeople: true,
   isSendImage: false,
-  isSendFile: false,
-  isMd: false,
-  contentLength: 200,
+  isPaste: false
 })
 
 async function getConfig() {

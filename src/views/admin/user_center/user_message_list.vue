@@ -3,19 +3,22 @@
     <div class="user_menu">
       <gvb_message_list @check="messageUserCheck" :data="messageData.list"></gvb_message_list>
     </div>
-    <gvb_message_record :userID="userID"></gvb_message_record>
+    <gvb_message_record is-head :userID="userID" :nick-name="nickName"></gvb_message_record>
   </div>
 </template>
 <script setup lang="ts">
 import Gvb_message_record from "@/components/common/gvb_message_record.vue";
 import Gvb_message_list from "@/components/common/gvb_message_list.vue";
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 import type {listDataType} from "@/api";
 import {messageUserListByMeApi} from "@/api/message_api";
 import type {messageType} from "@/api/message_api";
 import {ref} from "vue";
+import router from "@/router";
+import {useRoute} from "vue-router";
 
 
+const route = useRoute()
 const messageData = reactive<listDataType<messageType>>({
   list: [],
   count: 0,
@@ -25,15 +28,31 @@ async function getMessageData() {
   let res = await messageUserListByMeApi()
   messageData.list = res.data.list
   messageData.count = res.data.count
+
+  if (isNaN(userID.value)){
+    return
+  }
+  const item = messageData.list.find((item)=>item.userID === userID.value)
+  if (item){
+    nickName.value = item.nickName
+  }
+
 }
 
 getMessageData()
 
-const userID = ref<number>(0)
-
+const userID = ref<number>(Number(route.query.user_id))
+const nickName = ref<string>("")
 
 async function messageUserCheck(data: messageType) {
   userID.value = data.userID
+  nickName.value = data.nickName
+
+  router.push({
+    query: {
+      user_id: userID.value
+    }
+  })
 }
 
 
@@ -57,7 +76,7 @@ async function messageUserCheck(data: messageType) {
   }
 
 
-  .gvb_message_record_component{
+  .gvb_message_record_component {
     width: calc(100% - 300px);
     margin-left: 20px;
 

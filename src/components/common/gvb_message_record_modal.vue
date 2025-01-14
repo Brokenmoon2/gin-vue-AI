@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal title="聊天" width="40%" :visible="props.visible" :footer="false" body-class="gvb_message_record_modal_body" @cancel="close">
-      <gvb_message_record :userID="props.userID"></gvb_message_record>
+      <gvb_message_record :userID="props.userID" ></gvb_message_record>
     </a-modal>
   </div>
 </template>
