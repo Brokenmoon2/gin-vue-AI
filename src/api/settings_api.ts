@@ -65,9 +65,15 @@ export interface qiniuType {
     size: number
 }
 
-export type settingsName = "qq" | "email" | "qiniu" | "jwt" | "chat_group"
+export interface gaodeType {
+    enable: boolean
+    key: string
+}
 
-export type settingsType = emailType | qqType | jwtType | qiniuType | chatGroupConfigType
+
+export type settingsName = "qq" | "email" | "qiniu" | "jwt" | "chat_group" | "gaode"
+
+export type settingsType = emailType | qqType | jwtType | qiniuType | chatGroupConfigType | gaodeType
 
 export function settingsInfoApi<T extends settingsType>(name: settingsName): Promise<baseResponse<T>> {
     return useAxios.get("/api/settings/" + name.toString())

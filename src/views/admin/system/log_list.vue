@@ -179,7 +179,7 @@ const columnDict = {
 const columns = ref(columnDict[params.type as keyof typeof columnDict])
 
 function selectDropDown(val: string, column: "userName" | "addr" | "date") {
-  if (column === "date"){
+  if (column === "date") {
     // 把时间处理一下
     val = dateFormat(val)
   }
@@ -377,6 +377,18 @@ function jsonPreview() {
         color: var(--color-text-2);
       }
     }
+  }
+}
+
+
+
+@media screen and (min-width: 1400px) and (max-width: 1800px) {
+  .search_date {
+    display: none;
+  }
+
+  .search_addr {
+    display: none;
   }
 }
 

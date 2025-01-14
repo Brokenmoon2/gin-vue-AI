@@ -16,10 +16,17 @@
               <a-switch v-model="form[(item.field as keyof settingsType)]"></a-switch>
             </template>
             <template v-else-if="item.type==='number'">
-              <a-input-number :placeholder="item.label" v-model="form[(item.field as keyof settingsType)]"></a-input-number>
+              <a-input-number :placeholder="item.label"
+                              v-model="form[(item.field as keyof settingsType)]"></a-input-number>
             </template>
             <template v-else>
-              <a-input :placeholder="item.label" v-model="form[(item.field as keyof settingsType)]"></a-input>
+              <template v-if="item.iptType==='password'">
+                <a-input :placeholder="item.label" type="password"
+                         v-model="form[(item.field as keyof settingsType)]"></a-input>
+              </template>
+              <template v-else>
+                <a-input :placeholder="item.label" v-model="form[(item.field as keyof settingsType)]"></a-input>
+              </template>
             </template>
           </a-form-item>
         </a-form>

@@ -33,6 +33,7 @@
 </template>
 
 <script setup lang="ts">
+
 import {defineComponent, h, ref, watch} from "vue";
 import type {Component} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -73,7 +74,7 @@ let menuList: MenuType[] = [
     ]
   },
   {
-    title: "文章管理", icon: IconBook, name: "article_mgr", child: [
+    title: "文章管理", icon: IconBook, name: "article", child: [
       {title: "文章列表", icon: IconBook, name: "article_list"},
       {title: "图片列表", icon: IconImage, name: "image_list"},
       {title: "评论列表", icon: getFontComponent("fa fa-comments"), name: "comment_list"},
@@ -91,16 +92,8 @@ let menuList: MenuType[] = [
     ]
   },
   {
-    title: "大模型管理", icon: IconMessage, name: "big_model", child: [
-      {title: "参数配置", icon: IconMessage, name: "options"},
-      {title: "角色配置", icon: IconMessage, name: "chat_role"},
-      {title: "会话管理", icon: IconMessage, name: "session"},
-    ]
-  },
-  {
     title: "系统管理", icon: IconSettings, name: "system", child: [
       {title: "菜单列表", icon: IconMenu, name: "menu_list"},
-      {title: "用户反馈", icon: IconMenu, name: "feedback_list"},
       {title: "广告列表", icon: IconShareAlt, name: "promotion_list"},
       {title: "系统日志", icon: IconFile, name: "log_list"},
       {title: "系统配置", icon: IconStorage, name: "system_system"},

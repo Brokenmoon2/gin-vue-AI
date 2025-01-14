@@ -189,4 +189,22 @@ function editArticleContent(record: articleType) {
     }
   }
 }
+
+@media screen and (min-width: 1400px) and (max-width: 1800px) {
+  .arco-table-th:nth-child(7){
+    display: none;
+  }
+  .arco-table-td:nth-child(7){
+    display: none;
+  }
+
+  .arco-table-th:nth-child(8){
+    display: none;
+  }
+  .arco-table-td:nth-child(8){
+    display: none;
+  }
+}
+
+
 </style>

@@ -35,7 +35,8 @@
                           {{ item.content }}
                         </template>
                         <template v-else>
-                          <MdPreview :theme="store.themeString" v-model="item.content" :editorId="'md__'+item.id"></MdPreview>
+                          <MdPreview :theme="store.themeString" v-model="item.content"
+                                     :editorId="'md__'+item.id"></MdPreview>
                         </template>
                       </div>
                     </div>
@@ -70,7 +71,8 @@
                     auto-size
                     placeholder="聊天内容"
                     style="height: 100%"></a-textarea>
-        <MdEditor v-else v-model="content" :theme="store.themeString" placeholder="聊天内容" :max-length="config.contentLength" :toolbars="[]"
+        <MdEditor v-else v-model="content" :theme="store.themeString" placeholder="聊天内容"
+                  :max-length="config.contentLength" :toolbars="[]"
                   :footers="[]" :on-upload-img="config.isSendImage ? onUploadImg : undefined" :preview="false"/>
         <a-button type="primary" class="send_button" @click="sendData">发送</a-button>
       </div>
@@ -82,7 +84,8 @@
 <script setup lang="ts">
 import {nextTick, reactive, ref} from "vue";
 import type {listDataType} from "@/api";
-import {chatMessageType, chatRecordApi, chatRemoveApi} from "@/api/chat_api";
+import {chatRecordApi, chatRemoveApi} from "@/api/chat_api";
+import type {chatMessageType} from "@/api/chat_api";
 import type {chatType} from "@/api/chat_api";
 import type {paramsType} from "@/api";
 import {Message} from "@arco-design/web-vue";
@@ -117,7 +120,9 @@ const config = reactive<chatGroupConfigType>({
   welcomeTitle: "【枫枫知道】在线聊天室",
   isOnlinePeople: true,
   isSendImage: false,
-  isPaste: false
+  isSendFile: false,
+  isMd: false,
+  contentLength: 200,
 })
 
 async function getConfig() {
@@ -172,7 +177,7 @@ function sendFileEvent() {
   Message.warning("文件上传开发中")
 }
 
-let socket = ref<WebSocket>()
+let socket = ref<WebSocket | null>()
 
 let index = 0
 
@@ -191,11 +196,11 @@ function websocketConnect() {
     if (index === 0) {
       // 第一条消息  区分我发的还是别人发的
       chatData.nickName = jsonData.nick_name
-      chatData.onlineCount = jsonData.online_count
+      chatData.onlineCount = jsonData.online_count as number
       index++
       return
     }
-    chatData.onlineCount = jsonData.online_count
+    chatData.onlineCount = jsonData.online_count as number
     chatRecordData.list.push({
       avatar: jsonData.avatar,
       content: jsonData.content,
@@ -317,7 +322,7 @@ function sendData() {
           white-space: break-spaces;
           word-break: break-all;
 
-          &.isMd{
+          &.isMd {
             white-space: inherit;
             word-break: inherit;
           }
@@ -334,12 +339,13 @@ function sendData() {
           }
 
 
-          .md-editor{
+          .md-editor {
             background-color: unset;
-            .md-editor-preview-wrapper{
+
+            .md-editor-preview-wrapper {
               padding: 0;
 
-              img{
+              img {
                 border: none;
               }
             }

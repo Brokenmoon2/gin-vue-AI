@@ -1,19 +1,24 @@
 <template>
   <div class="gvb_message_list">
-    <div :class="{item: true, active: active === item.userID}" @click="checkItem(item)" v-for="item in props.data">
-      <img class="avatar" :src="item.avatar" alt="">
-      <div class="nickName">
-        <a-typography-paragraph
-            :ellipsis="{
+    <template v-if="props.data.length">
+      <div :class="{item: true, active: active === item.userID}" @click="checkItem(item)" v-for="item in props.data">
+        <img class="avatar" :src="item.avatar" alt="">
+        <div class="nickName">
+          <a-typography-paragraph
+              :ellipsis="{
         rows: 1,
         showTooltip: true,
         css: true,
       }"
-        >{{ item.nickName }}
-        </a-typography-paragraph>
+          >{{ item.nickName }}
+          </a-typography-paragraph>
+        </div>
+        <div class="count">{{ item.count }}</div>
       </div>
-      <div class="count">{{ item.count }}</div>
-    </div>
+    </template>
+    <template v-else>
+      <a-empty/>
+    </template>
   </div>
 </template>
 <script setup lang="ts">

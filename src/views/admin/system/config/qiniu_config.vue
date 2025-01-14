@@ -2,10 +2,10 @@
   <gvb_config
       title="七牛云配置"
       name="qiniu"
-      :left-width="45"
-      :right-with="55"
-      :label-span="4"
-      :wrapper-span="20"
+      :left-width="isLaptops1 ? 55: 45"
+      :right-with="isLaptops1 ? 45: 55"
+      :label-span="isLaptops1 ? 5:4"
+      :wrapper-span="isLaptops1?19:20"
       :column="column" :help-data="helpList">
     <template #alert>
       <a-alert style="margin-top: 20px">启用七牛云存储之后，图片上传将上传到七牛云上</a-alert>
@@ -17,6 +17,8 @@
 import Gvb_config from "@/components/admin/gvb_config.vue";
 import type {configColumnType} from "@/types";
 import type {qiniuType} from "@/api/settings_api";
+
+const isLaptops1 = isLaptops
 
 const column: configColumnType<qiniuType>[] = [
   {field: "access_key", label: "access_key", rules: [{required: true, message: '请输入access_key'}]},

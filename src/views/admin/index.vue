@@ -4,7 +4,7 @@
       <Gvb_logo></Gvb_logo>
       <Gvb_menu></Gvb_menu>
     </aside>
-    <main>
+    <main :class="{isLaptops: isLaptops1}">
       <div class="gvb_head">
         <Gvb_bread_crumb></Gvb_bread_crumb>
         <div class="gvb_function_area">
@@ -37,6 +37,7 @@ import Gvb_tabs from "@/components/admin/gvb_tabs.vue";
 import Gvb_theme from "@/components/common/gvb_theme.vue";
 import {useStore} from "@/stores";
 import Gvb_user_info_menu from "@/components/common/gvb_user_info_menu.vue";
+const isLaptops1 = isLaptops
 
 const store = useStore()
 const route = useRoute()

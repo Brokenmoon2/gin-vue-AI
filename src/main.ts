@@ -11,6 +11,8 @@ import "@/assets/theme.css"
 const app = createApp(App)
 app.use(ArcoVue)
 app.use(createPinia())
-app.use(router)
+app.use(router);
+
+(window as any).isLaptops = document.documentElement.clientWidth > 1400 && document.documentElement.clientWidth < 1800
 
 app.mount('#app')
