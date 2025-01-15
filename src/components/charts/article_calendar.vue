@@ -27,7 +27,6 @@ async function getData() {
     data.countList.push([item.date, item.count])
   })
   isShow.value = true
-  console.log(data)
 }
 
 watch(()=>store.theme, ()=>{

@@ -54,7 +54,13 @@ export interface articleDataType {
 }
 
 
-export function articleListApi(params: paramsType): Promise<baseResponse<listDataType<articleType>>> {
+export interface articleParamsType extends paramsType{
+    date?: string
+    tag?: string
+}
+
+
+export function articleListApi(params: articleParamsType): Promise<baseResponse<listDataType<articleType>>> {
     return useAxios.get("/api/articles", {params: params})
 }
 

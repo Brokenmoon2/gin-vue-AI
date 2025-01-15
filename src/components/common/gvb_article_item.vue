@@ -1,10 +1,16 @@
 <template>
   <div :class="{gvb_article_item: true, preview: props.preview}">
     <div class="cover">
-      <a-image :src="props.data.banner_url"></a-image>
+      <img :src="props.data.banner_url"/>
     </div>
     <div class="info">
-      <div class="title">{{ props.data.title }}</div>
+      <div class="title">
+        <template v-if="props.data.id === ''">
+          {{ props.data.title }}
+        </template>
+        <router-link v-else :to="{name: 'article', params: {id: props.data.id}}" v-html="props.data.title"></router-link>
+
+      </div>
       <div class="abstract">
         <a-typography-paragraph :ellipsis="{
         rows: 2,
@@ -58,6 +64,7 @@ const props = defineProps<Props>()
 <style lang="scss">
 .gvb_article_item {
   width: 100%;
+  height: 150px;
   padding: 20px;
   display: flex;
   background-color: var(--color-fill-2);
@@ -70,7 +77,7 @@ const props = defineProps<Props>()
   }
 
   .cover {
-    width: 30%;
+    width: 25%;
     border-radius: 5px;
     overflow: hidden;
 
@@ -80,37 +87,47 @@ const props = defineProps<Props>()
       }
     }
 
-    .arco-image {
+    img {
       width: 100%;
       height: 100%;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: all .3s;
-      }
+      object-fit: cover;
+      transition: all .3s;
     }
   }
 
   .info {
-    width: 70%;
+    width: 75%;
     padding-left: 20px;
     color: var(--color-text-2);
 
     .title {
       font-weight: 600;
       font-size: 16px;
+
+      a {
+        color: var(--color-text-1);
+        text-decoration: none;
+      }
+
+      em {
+        color: #d71345;
+        margin-right: 2px;
+      }
     }
 
     .abstract {
+      height: 3rem;
+
       .arco-typography {
         margin-bottom: 0;
+        color: var(--color-text-2);
       }
     }
 
     .data {
       margin-top: 5px;
+      display: flex;
+      align-items: center;
 
       .category {
         margin-right: 10px;

@@ -30,6 +30,11 @@ const router = createRouter({
                     path: "chat",
                     name: "chat",
                     component: () => import('../views/web/chat.vue'),
+                },
+                {
+                    path: "article/:id",
+                    name: "article",
+                    component: () => import('../views/web/article.vue'),
                 }
             ]
         },
@@ -98,7 +103,7 @@ const router = createRouter({
                 },
                 {
                     path: "article",
-                    name: "article",
+                    name: "article_mgr",
                     meta: {
                         title: "文章管理",
                         isAdmin: true,

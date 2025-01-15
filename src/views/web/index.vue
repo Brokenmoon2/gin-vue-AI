@@ -18,16 +18,18 @@
           </gvb_card>
           <gvb_card title="文章列表" class="article_card">
             <template #head-right>
-              <a-input-search placeholder="搜索文章标题"></a-input-search>
+              <a-input-search v-model="key" @search="search" @keydown.enter="search" placeholder="搜索文章标题"></a-input-search>
             </template>
-            <gvb_article_list></gvb_article_list>
+            <gvb_article_list ref="gvbArticleList"></gvb_article_list>
           </gvb_card>
         </div>
         <div class="right">
           <gvb_card title="独家推广">
             <gvb_promotion></gvb_promotion>
           </gvb_card>
-          <gvb_card title="标签云"></gvb_card>
+          <gvb_card title="标签云">
+            <gvb_tags></gvb_tags>
+          </gvb_card>
           <gvb_card title="个人名片">
             <gvb_user_card></gvb_user_card>
           </gvb_card>
@@ -53,6 +55,16 @@ import Gvb_user_card from "@/components/web/gvb_user_card.vue";
 import Gvb_fade_back from "@/components/web/gvb_fade_back.vue";
 import Article_calendar from "@/components/charts/article_calendar.vue";
 import Gvb_article_list from "@/components/web/gvb_article_list.vue";
+import {ref} from "vue";
+import Gvb_tags from "@/components/web/gvb_tags.vue";
+
+
+const gvbArticleList = ref()
+
+const key = ref("")
+function search(){
+  gvbArticleList.value.getData({key: key.value})
+}
 
 </script>
 <style lang="scss">
