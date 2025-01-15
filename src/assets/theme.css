@@ -10,6 +10,8 @@ body {
     --container_width: 1200px;
 
     --md-bk-color: white;
+
+    --hightColor: #d71345;
 }
 
 body[arco-theme='dark'] {

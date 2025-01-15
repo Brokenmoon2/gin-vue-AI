@@ -13,9 +13,7 @@
             <router-link :to="item.path" v-else>{{ item.title }}</router-link>
           </template>
         </div>
-        <div class="search">
-          <IconSearch></IconSearch>
-        </div>
+        <gvb_search></gvb_search>
       </div>
       <div class="right">
         <div class="login" v-if="!store.isLogin">
@@ -41,6 +39,7 @@ import {menuNameListApi} from "@/api/menu_api";
 import type {menuNameType} from "@/api/menu_api";
 import {ref} from "vue";
 import {onUnmounted} from "vue";
+import Gvb_search from "@/components/web/gvb_search.vue";
 
 
 interface Props {
@@ -160,7 +159,7 @@ getData()
         }
       }
 
-      .search {
+      .gvb_search {
         svg {
           cursor: pointer;
         }

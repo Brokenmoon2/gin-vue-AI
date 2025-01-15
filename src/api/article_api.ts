@@ -131,3 +131,15 @@ export function articleCollectsPostApi(id: string): Promise<baseResponse<string>
 export function articleDiggApi(id: string): Promise<baseResponse<string>> {
     return useAxios.post("/api/articles/digg", {id})
 }
+
+export interface articleSearchType {
+    body: string
+    id: string
+    key: string
+    slug: string
+    title: string
+}
+
+export function articleSearchApi(params: paramsType) :Promise<baseResponse<listDataType<articleSearchType>>>{
+    return useAxios.get("/api/articles/text", {params})
+}
