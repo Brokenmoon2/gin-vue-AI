@@ -54,9 +54,10 @@ export interface articleDataType {
 }
 
 
-export interface articleParamsType extends paramsType{
+export interface articleParamsType extends paramsType {
     date?: string
     tag?: string
+    category?: string
 }
 
 
@@ -109,6 +110,6 @@ export interface articleCalendarType {
     date: string
 }
 
-export function articleCalendarApi():Promise<baseResponse<articleCalendarType[]>>{
+export function articleCalendarApi(): Promise<baseResponse<articleCalendarType[]>> {
     return useAxios.get("/api/articles/calendar")
 }

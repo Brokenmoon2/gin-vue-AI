@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-
 import {defineComponent, h, ref, watch} from "vue";
 import type {Component} from "vue";
 import {useRoute, useRouter} from "vue-router";

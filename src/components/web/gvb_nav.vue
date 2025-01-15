@@ -75,7 +75,6 @@ onUnmounted(() => {
   if (!noScroll) {
     window.removeEventListener("scroll", scroll)
   }
-
 })
 
 
@@ -87,15 +86,11 @@ async function getData() {
       navList.value = JSON.parse(val)
       return
     } catch (e) {
-
     }
   }
-
   let res = await menuNameListApi()
   navList.value = res.data
-
   sessionStorage.setItem("navList", JSON.stringify(navList.value))
-
 }
 
 getData()
@@ -106,6 +101,7 @@ getData()
 
 .gvb_nav {
   width: 100%;
+  top: 0;
   display: flex;
   justify-content: center;
   position: fixed;

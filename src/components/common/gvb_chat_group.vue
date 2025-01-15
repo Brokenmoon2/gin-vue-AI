@@ -7,7 +7,7 @@
         </div>
         <div class="outline">在线人数：{{ config.isOnlinePeople ? chatData.onlineCount : '∞' }}</div>
 
-        <div class="manage">
+        <div class="manage" v-if="store.isAdmin || store.isTourist">
           <IconRefresh style="cursor: pointer" @click="flush"></IconRefresh>
           <a-checkbox v-model="isManage">管理模式</a-checkbox>
           <a-button v-if="isManage && selectIDList.length" size="mini" style="margin-left: 10px" type="primary"
@@ -99,6 +99,9 @@ import {MdEditor, MdPreview} from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import {onUploadImg} from "@/api/image_api";
 import {useStore} from "@/stores";
+import {onUnmounted} from "vue";
+
+
 
 const store = useStore()
 const params = reactive<paramsType>({
@@ -186,6 +189,10 @@ const chatData = reactive({
   onlineCount: 0
 })
 
+onUnmounted(() => {
+  socket.value?.close()
+})
+
 function websocketConnect() {
   // 建立websocket连接
   socket.value = new WebSocket(`ws://${location.host}/ws/api/chat_groups`)
@@ -230,7 +237,7 @@ function websocketConnect() {
   }
   // 服务端关闭
   socket.value.onclose = function (ev) {
-    Message.error("连接断开")
+    // Message.error("连接断开")
     socket.value = null
   }
 }

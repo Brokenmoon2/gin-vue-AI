@@ -11,7 +11,6 @@
     <template v-else>
       <a-empty class="nodata"></a-empty>
     </template>
-
   </div>
 </template>
 

@@ -15,9 +15,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-
 onMounted(() => {
-
   let color = "#000000"
   let inRangeColor = [
     "#ebedf0", "#c6e48b", "#7bc96f", "#32af4a",
@@ -116,6 +114,3 @@ onMounted(() => {
 })
 
 </script>
-<style lang="scss">
-
-</style>

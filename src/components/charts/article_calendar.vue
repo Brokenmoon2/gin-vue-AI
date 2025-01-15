@@ -11,8 +11,8 @@ import {articleCalendarApi} from "@/api/article_api";
 import {reactive, ref, watch} from "vue";
 import {useStore} from "@/stores";
 
-const store = useStore()
 
+const store = useStore()
 const data = reactive<{ dateList: string[], countList: Array<Array<number>> }>({
   dateList: [],
   countList: [],
@@ -36,9 +36,5 @@ watch(()=>store.theme, ()=>{
   })
 })
 
-
 getData()
 </script>
-<style lang="scss">
-
-</style>
