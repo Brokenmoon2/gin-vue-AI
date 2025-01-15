@@ -10,7 +10,7 @@
       <div class="container">
         <div class="article_container">
           <div class="head">
-            <div class="title">{{ data.title }}</div>
+            <div class="title" :id="data.title">{{ data.title }}</div>
             <div class="date">
               发布时间：{{ dateFormat(data.created_at) }} （{{ relativeCurrentTime(data.created_at) }}）
             </div>
@@ -48,7 +48,6 @@
             digg_count:data.digg_count,
             look_count: data.look_count,
           }"></gvb_user_info_preview>
-          <Gvb_login v-model:visible="visible"></Gvb_login>
           <div :class="{article_actions: true, isFixed: isFixed}">
             <gvb_card title="文章目录" class="gvb_article_dict">
               <MdCatalog
@@ -81,7 +80,7 @@ import Gvb_footer from "@/components/web/gvb_footer.vue";
 import Gvb_user_info_preview from "@/components/common/gvb_user_info_preview.vue";
 import Gvb_comment from "@/components/common/gvb_comment.vue";
 import {articleDetailApi} from "@/api/article_api";
-import {reactive, ref, watch} from "vue";
+import {nextTick, reactive, ref, watch} from "vue";
 import type {articleType} from "@/api/article_api";
 import {dateFormat, relativeCurrentTime} from "@/utils/date";
 import {MdPreview, MdCatalog} from "md-editor-v3";
@@ -92,8 +91,8 @@ import Gvb_card from "@/components/common/gvb_card.vue";
 import {IconThumbUpFill, IconStarFill, IconDoubleUp, IconMessage} from "@arco-design/web-vue/es/icon";
 import {articleDiggApi, articleCollectsPostApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
-import Gvb_login from "@/components/common/gvb_login.vue";
-import {onUnmounted} from "vue";
+import {onUnmounted, onMounted} from "vue";
+import {showLogin} from "@/components/common/gvb_login";
 
 const mdID = "articleID_1007"
 
@@ -147,6 +146,25 @@ function scroll() {
 onUnmounted(() => {
   window.removeEventListener("scroll", scroll)
 })
+onMounted(() => {
+  let hash = route.hash
+  if (hash !== "") {
+
+    setTimeout(() => {
+      let dom = document.querySelector(hash)
+      if (dom) {
+        let top = dom.getBoundingClientRect().top
+        document.documentElement.scrollTo({
+          top: top - 60,
+          behavior: "smooth"
+        })
+      }
+    }, 150)
+
+
+  }
+})
+
 
 function goTop() {
   document.documentElement.scrollTo({
@@ -188,12 +206,10 @@ async function articleDigg() {
   }, 2000)
 }
 
-const visible = ref(false)
-
 async function articleColl() {
   if (!store.isLogin) {
     Message.warning("请登录")
-    visible.value = true
+    showLogin()
     return
   }
   let res = await articleCollectsPostApi(id.value)

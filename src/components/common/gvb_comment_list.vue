@@ -5,14 +5,17 @@
         :content="item.content"
         :datetime="relativeCurrentTime(item.created_at)"
         v-for="item in props.data"
-        :avatar="item.user.avatar"
     >
       <template #actions>
-        <span class="action" @click="commentDigg(item)"><IconHeart/> 点赞（{{ item.digg_count}}） </span>
+        <span class="action" @click="commentDigg(item)"><IconHeart/> 点赞（{{ item.digg_count }}） </span>
         <span class="action" @click="applyShow(item)"><IconMessage/> 回复 </span>
-        <a-popconfirm v-if="store.isAdmin || store.userInfo.user_id === item.user_id" content="是否删除这条评论?" @ok="deleteComment(item)">
+        <a-popconfirm v-if="store.isAdmin || store.userInfo.user_id === item.user_id" content="是否删除这条评论?"
+                      @ok="deleteComment(item)">
           <span class="action"><IconDelete/> 删除 </span>
         </a-popconfirm>
+      </template>
+      <template #avatar>
+        <a-avatar @click="avatarClick(item)"><img alt="avatar" :src="item.user.avatar"/></a-avatar>
       </template>
       <a-comment
           :avatar="store.userInfo.avatar"
@@ -20,7 +23,8 @@
       >
         <template #content>
           <div class="apply_comment">
-            <a-input :class="'comment_apply_ipt__'+item.id" @keydown.enter.ctrl="applyComment(item)" :placeholder="'回复'+item.user.nick_name"
+            <a-input :class="'comment_apply_ipt__'+item.id" @keydown.enter.ctrl="applyComment(item)"
+                     :placeholder="'回复'+item.user.nick_name"
                      v-model="item.applyContent"></a-input>
             <a-button type="primary" style="margin-left: 10px" @click="applyComment(item)">回复</a-button>
           </div>
@@ -41,6 +45,7 @@ import {useStore} from "@/stores";
 import {IconDelete, IconMessage} from "@arco-design/web-vue/es/icon";
 import {IconHeart} from "@arco-design/web-vue/es/icon";
 import {nextTick, ref} from "vue";
+import {showMessageRecord} from "@/components/common/gvb_message_record";
 
 const store = useStore()
 
@@ -61,11 +66,11 @@ async function deleteComment(record: commentType) {
 
 function applyShow(record: commentType) {
   record.isApply = !record.isApply
-  if (!record.isApply){
+  if (!record.isApply) {
     saveID.value = 0
     return
   }
-  nextTick(()=>{
+  nextTick(() => {
     let dom = document.querySelector(`.comment_apply_ipt__${record.id.toString()} input`) as HTMLInputElement
     dom.focus()
   })
@@ -97,12 +102,21 @@ async function applyComment(record: commentType) {
   emits("list")
 }
 
-async function commentDigg(record: commentType){
+async function commentDigg(record: commentType) {
   let res = await commentDiggApi(record.id)
   if (res.code) Message.error(res.msg)
   Message.success(res.msg)
-  record.digg_count ++
+  record.digg_count++
 }
+
+function avatarClick(item: commentType) {
+  if (store.userInfo.user_id === item.user_id) {
+    Message.warning("不能和自己聊天")
+    return
+  }
+  showMessageRecord(item.user_id, item.user.nick_name)
+}
+
 
 </script>
 <style lang="scss">

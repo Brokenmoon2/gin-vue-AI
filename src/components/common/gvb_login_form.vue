@@ -1,37 +1,37 @@
 <template>
-  <a-form class="gvb_login_form" ref="formRef" :model="form" :label-col-props="{span: 0}"
-          :wrapper-col-props="{span: 24}">
+  <Form class="gvb_login_form" ref="formRef" :model="form" :label-col-props="{span: 0}"
+        :wrapper-col-props="{span: 24}">
     <div class="title">用户登录</div>
-    <a-form-item field="user_name" label="用户名"
-                 :rules="[{required:true,message:'请输入用户名'}]"
-                 :validate-trigger="['blur']"
+    <FormItem field="user_name" label="用户名"
+              :rules="[{required:true,message:'请输入用户名'}]"
+              :validate-trigger="['blur']"
     >
-      <a-input v-model="form.user_name" placeholder="用户名">
+      <Input v-model="form.user_name" placeholder="用户名">
         <template #prefix>
           <icon-user/>
         </template>
-      </a-input>
-    </a-form-item>
-    <a-form-item field="password" label="密码"
-                 :rules="[{required:true,message:'请输入密码'}]"
-                 :validate-trigger="['blur']"
+      </Input>
+    </FormItem>
+    <FormItem field="password" label="密码"
+              :rules="[{required:true,message:'请输入密码'}]"
+              :validate-trigger="['blur']"
     >
-      <a-input type="password" v-model="form.password" placeholder="密码">
+      <Input type="password" v-model="form.password" placeholder="密码">
         <template #prefix>
           <icon-lock/>
         </template>
-      </a-input>
-    </a-form-item>
-    <a-button type="primary" @click="loginEmail">登录</a-button>
+      </Input>
+    </FormItem>
+    <Button type="primary" @click="loginEmail">登录</Button>
     <div class="other-login">
       <div class="label">第三方登录</div>
       <div class="icons">
-        <a href="">
+        <a href="javascript:void (0)" @click="qqLogin">
           <img src="/image/icon/qq.png" alt="">
         </a>
       </div>
     </div>
-  </a-form>
+  </Form>
 </template>
 
 <script setup lang="ts">
@@ -43,9 +43,17 @@ import type {loginEmailType} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {useStore} from "@/stores";
 import {useRoute} from "vue-router";
+import {loginQQPathApi} from "@/api/user_api";
+import {Form, FormItem, Input, Button} from "@arco-design/web-vue";
+
+
+const props = defineProps({
+  qqRedirectPath: {
+    type: String,
+  }
+})
 
 const emits = defineEmits(["ok"])
-const route = useRoute()
 const store = useStore()
 const form = reactive<loginEmailType>({
   user_name: "",
@@ -80,6 +88,29 @@ async function loginEmail() {
   emits("ok")
 }
 
+async function qqLogin() {
+  let res = await loginQQPathApi()
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
+  if (res.data === "") {
+    Message.warning("未配置qq登录")
+    return
+  }
+
+  const route = useRoute()
+  // 存一下我当前点登录的路径
+  // 判断是不是login页面来的
+  let path = route.path
+  if (props.qqRedirectPath){
+    path = props.qqRedirectPath
+  }
+  localStorage.setItem("redirectPath", path)
+
+  window.open(res.data, "_self")
+
+}
 
 </script>
 
