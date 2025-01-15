@@ -15,6 +15,21 @@ const router = createRouter({
                     path: "",
                     name: "index",
                     component: () => import('../views/web/index.vue'),
+                },
+                {
+                    path: "news",
+                    name: "news",
+                    component: () => import('../views/web/news.vue'),
+                },
+                {
+                    path: "search",
+                    name: "search",
+                    component: () => import('../views/web/search.vue'),
+                },
+                {
+                    path: "chat",
+                    name: "chat",
+                    component: () => import('../views/web/chat.vue'),
                 }
             ]
         },

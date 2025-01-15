@@ -4,6 +4,8 @@ body {
     --login_bg: rgba(255, 255, 255, 0.8);
     --charts_color1: #3f95c2;
     --charts_color2: #6dc8e1;
+
+    --nav_text_color: #dcdcdc;
 }
 
 body[arco-theme='dark'] {

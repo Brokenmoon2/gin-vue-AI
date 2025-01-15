@@ -1,7 +1,7 @@
 <template>
   <div class="index_view">
     <gvb_nav></gvb_nav>
-    首页
+    搜索
   </div>
 </template>
 <script setup lang="ts">

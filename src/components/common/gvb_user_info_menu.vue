@@ -76,6 +76,25 @@ function select(value: any) {
 </script>
 
 <style lang="scss">
+
+.gvb_user_info_menu {
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .gvb_user_info_menu_dropdown {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+
+    .gvb_user_info_menu_dropdown_span {
+      margin: 0 5px;
+    }
+  }
+}
+
 .gvb_dropdown {
   .arco-dropdown-group-title {
     margin-top: 0;
