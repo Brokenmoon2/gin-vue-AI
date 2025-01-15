@@ -41,7 +41,7 @@
           <a-input v-model="form.source" placeholder="文章来源"></a-input>
         </a-form-item>
         <a-form-item label="预览" v-if="form.title && form.banner_url && form.category" content-class="preview_body">
-          <Gvb_article_item :data="form"></Gvb_article_item>
+          <Gvb_article_item :data="form" preview></Gvb_article_item>
         </a-form-item>
       </a-form>
     </a-modal>

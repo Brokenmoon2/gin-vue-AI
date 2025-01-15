@@ -10,7 +10,7 @@ export interface promotionType {
     title: string
 }
 
-export function promotionListApi(params: paramsType): Promise<baseResponse<listDataType<promotionType>>> {
+export function promotionListApi(params?: paramsType): Promise<baseResponse<listDataType<promotionType>>> {
     return useAxios.get("/api/adverts", {
         params: params, headers: {
             "Gvb_referer": location.pathname,

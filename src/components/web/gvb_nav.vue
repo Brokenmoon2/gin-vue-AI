@@ -56,7 +56,7 @@ const navList = ref<menuNameType[]>([])
 
 const isShow = ref(true)
 
-if (!noScroll){
+if (!noScroll) {
   isShow.value = false
   window.addEventListener("scroll", scroll)
 }
@@ -72,7 +72,7 @@ function scroll() {
 }
 
 onUnmounted(() => {
-  if (!noScroll){
+  if (!noScroll) {
     window.removeEventListener("scroll", scroll)
   }
 
@@ -116,6 +116,7 @@ getData()
   &.isShow {
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
+    box-shadow: 5px 0 5px 0 rgba(0, 0, 0, 0.1);
 
     a {
       color: var(--color-text-1);

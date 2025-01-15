@@ -1,5 +1,5 @@
 <template>
-  <div class="gvb_article_item">
+  <div :class="{gvb_article_item: true, preview: props.preview}">
     <div class="cover">
       <a-image :src="props.data.banner_url"></a-image>
     </div>
@@ -48,7 +48,8 @@ import {IconClockCircle} from "@arco-design/web-vue/es/icon";
 import type {articleUpdateType, articleDataType} from "@/api/article_api";
 
 interface Props {
-  data: articleUpdateType & articleDataType,
+  data: articleUpdateType & articleDataType
+  preview?: boolean
 }
 
 const props = defineProps<Props>()
@@ -56,13 +57,17 @@ const props = defineProps<Props>()
 
 <style lang="scss">
 .gvb_article_item {
-  width: 585px;
+  width: 100%;
   padding: 20px;
   display: flex;
   background-color: var(--color-fill-2);
   border-radius: 5px;
-  transform: scale(0.7);
-  transform-origin: left top;
+
+  &.preview {
+    transform: scale(0.7);
+    transform-origin: left top;
+    width: 585px;
+  }
 
   .cover {
     width: 30%;
@@ -103,18 +108,23 @@ const props = defineProps<Props>()
         margin-bottom: 0;
       }
     }
-    .data{
+
+    .data {
       margin-top: 5px;
-      .category{
+
+      .category {
         margin-right: 10px;
       }
-      .date{
+
+      .date {
         margin-right: 10px;
       }
-      .article_data{
-        >span{
+
+      .article_data {
+        > span {
           margin-right: 8px;
-          i{
+
+          i {
             margin-right: 3px;
           }
         }
