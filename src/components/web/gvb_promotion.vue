@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {promotionListApi} from "@/api/promotion_api";
-import {promotionType} from "@/api/promotion_api";
+import type {promotionType} from "@/api/promotion_api";
 import {ref} from "vue";
 
 const promotionList = ref<promotionType[]>([])

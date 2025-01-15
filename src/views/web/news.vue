@@ -83,11 +83,11 @@ function checkAside(item: newsAsideType) {
 
 
 const activeFont = computed(() => {
-  return newsAside.find((item) => params.id === item.id).font
+  return (newsAside.find((item) => params.id === item.id) as newsAsideType).font
 })
 
 const activeName = computed(() => {
-  return newsAside.find((item) => params.id === item.id).name
+  return (newsAside.find((item) => params.id === item.id) as newsAsideType).name
 })
 
 const newsList = ref<newsType[]>([])

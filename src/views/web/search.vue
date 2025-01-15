@@ -101,7 +101,7 @@ type sortType =
     | "created_at desc"
     | "digg_count desc"
     | "comment_count desc"
-    | "collects_count desc"
+    | "collects_count desc" | string
 
 const params = reactive<articleParamsType & { sort: sortType }>({
   sort: "",

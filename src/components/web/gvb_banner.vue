@@ -14,7 +14,7 @@
       </div>
     </div>
     <a-carousel
-        :auto-play="{interval: data.banner_time * 1000}"
+        :auto-play="{interval: data.banner_time as number * 1000}"
         indicator-type="dot"
         show-arrow="hover"
     >

@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import {newsType} from "@/api/news_api";
+import type {newsType} from "@/api/news_api";
 import {reactive} from "vue";
 import {newsListApi} from "@/api/news_api";
 

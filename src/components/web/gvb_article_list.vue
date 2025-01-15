@@ -5,7 +5,7 @@
         <gvb_article_item v-for="item in data.list" :data="item"></gvb_article_item>
       </div>
       <div class="page">
-        <a-pagination :total="data.count" v-model:current="params.page" @change="getData" show-total></a-pagination>
+        <a-pagination :total="data.count" v-model:current="params.page" @change="pageChange" show-total></a-pagination>
       </div>
     </template>
     <template v-else>
@@ -48,14 +48,18 @@ defineExpose({
 
 watch(() => route.query, () => {
   if (route.query.date !== "") {
-    params.date = route.query.date
+    params.date = route.query.date as string
   }
   if (route.query.tag !== "") {
-    params.tag = route.query.tag
+    params.tag = route.query.tag as string
   }
   getData()
 }, {deep: true, immediate: true})
 
+
+function pageChange(){
+  getData()
+}
 
 </script>
 <style lang="scss">

@@ -17,6 +17,6 @@ export function feedbackCreateApi(data: fadeBackCreateType):Promise<baseResponse
     return useAxios.post("/api/feedback", data)
 }
 
-export function feedbackListApi(params: paramsType):Promise<baseResponse<listDataType<fadeBackType>>>{
+export function feedbackListApi(params?: paramsType):Promise<baseResponse<listDataType<fadeBackType>>>{
     return useAxios.get("/api/feedback", {params})
 }
