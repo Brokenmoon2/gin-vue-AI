@@ -6,6 +6,8 @@ body {
     --charts_color2: #6dc8e1;
 
     --nav_text_color: white;
+
+    --container_width: 1200px;
 }
 
 body[arco-theme='dark'] {

@@ -35,9 +35,16 @@ const props = defineProps<Props>()
     border-bottom: 1px solid var(--bg);
     justify-content: space-between;
 
-    .title{
+    .title {
       font-size: 18px;
       font-weight: 600;
+    }
+
+    .right {
+      a {
+        color: var(--color-text-2);
+        text-decoration: none;
+      }
     }
   }
 

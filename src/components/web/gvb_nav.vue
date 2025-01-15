@@ -3,8 +3,8 @@
     <div class="gvb_nav_container">
       <div class="left">
         <div class="logo">
-          <div class="slogan">枫枫知道</div>
-          <div class="en_slogan">FFENGZHIDAO</div>
+          <div class="slogan">{{ store.siteInfo.slogan }}</div>
+          <div class="en_slogan">{{ store.siteInfo.slogan_en }}</div>
         </div>
         <div class="nav">
           <template v-for="item in navList">
@@ -42,15 +42,25 @@ import type {menuNameType} from "@/api/menu_api";
 import {ref} from "vue";
 import {onUnmounted} from "vue";
 
+
+interface Props {
+  noScroll?: boolean // 不需要滚动监听
+}
+
+const props = defineProps<Props>()
+const {noScroll = false} = props
+
 const store = useStore()
 
 const navList = ref<menuNameType[]>([])
 
+const isShow = ref(true)
 
-window.addEventListener("scroll", scroll)
+if (!noScroll){
+  isShow.value = false
+  window.addEventListener("scroll", scroll)
+}
 
-
-const isShow = ref(false)
 
 function scroll() {
   let top = document.documentElement.scrollTop
@@ -62,7 +72,10 @@ function scroll() {
 }
 
 onUnmounted(() => {
-  window.removeEventListener("scroll", scroll)
+  if (!noScroll){
+    window.removeEventListener("scroll", scroll)
+  }
+
 })
 
 
@@ -98,11 +111,13 @@ getData()
   position: fixed;
   transition: all .3s;
   color: var(--nav_text_color);
+  z-index: 100;
 
   &.isShow {
     background-color: var(--color-bg-1);
     color: var(--color-text-1);
-    a{
+
+    a {
       color: var(--color-text-1);
     }
   }
@@ -110,10 +125,14 @@ getData()
   a {
     text-decoration: none;
     color: var(--nav_text_color);
+
+    &.router-link-exact-active {
+      color: var(--active);
+    }
   }
 
   .gvb_nav_container {
-    width: 1400px;
+    width: var(--container_width);
     height: 60px;
     display: flex;
     align-items: center;

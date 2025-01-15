@@ -5,6 +5,8 @@ import {Message} from "@arco-design/web-vue";
 import {userInfoApi} from "@/api/user_api";
 import type {userInfoType} from "@/api/user_api";
 import type {Themes} from "md-editor-v3";
+import type {siteInfoType} from "@/api/settings_api";
+import {siteInfoApi} from "@/api/settings_api";
 
 export interface userStoreInfoType {
     user_name: string
@@ -27,6 +29,24 @@ const userInfo: userStoreInfoType = {
     token: "",
     exp: 0,
 }
+const siteInfo: siteInfoType = {
+    addr: "湖南长沙",
+    bei_an: "湘ICP备2021010654号-3",
+    bilibili_url: "https://space.bilibili.com/359151217",
+    created_at: "2023-09-15",
+    email: "",
+    gitee_url: "https://gitee.com/fengfengzhidao",
+    github_url: "https://github.com/fengfengzhidao/",
+    job: "go后端开发",
+    name: "枫枫",
+    qq_image: "",
+    slogan: "枫枫知道",
+    slogan_en: "FFENGZHIDAO",
+    title: "",
+    version: "8.0.1",
+    web: "",
+    wechat_image: "",
+}
 
 export const useStore = defineStore('counter', {
     state() {
@@ -34,6 +54,7 @@ export const useStore = defineStore('counter', {
             theme: theme,
             collapsed: collapsed, // 后台侧边栏的搜索状态，默认展开
             userInfo: userInfo,
+            siteInfo: siteInfo,
         }
     },
     actions: {
@@ -114,6 +135,22 @@ export const useStore = defineStore('counter', {
         clearUserInfo() {
             this.userInfo = userInfo
             localStorage.removeItem("userInfo")
+        },
+        async loadSiteInfo() {
+            const val = sessionStorage.getItem("siteInfo")
+            if (val !== null) {
+                try {
+                    this.siteInfo = JSON.parse(val)
+                    return
+                } catch (e) {
+
+                }
+            }
+            let res = await siteInfoApi()
+            this.siteInfo = res.data
+
+            sessionStorage.setItem("siteInfo", JSON.stringify(this.siteInfo))
+
         }
     },
     getters: {

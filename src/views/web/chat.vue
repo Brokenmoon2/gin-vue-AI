@@ -1,6 +1,6 @@
 <template>
   <div class="index_view">
-    <gvb_nav></gvb_nav>
+    <gvb_nav no-scroll></gvb_nav>
     聊天室
   </div>
 </template>
@@ -8,7 +8,5 @@
 import Gvb_nav from "@/components/web/gvb_nav.vue";
 </script>
 <style lang="scss">
-.index_view {
-  height: 100vh;
-}
+
 </style>

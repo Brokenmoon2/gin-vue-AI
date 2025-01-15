@@ -2,7 +2,11 @@
   <div class="gvb_banner">
     <div class="head">
       <div class="slogan">{{ data.slogan }}</div>
-      <div class="abstract">{{ data.abstract }}</div>
+      <div class="abstract">
+        <VueTyped :strings="data.abstract" loop>
+          <span class="typing"></span>
+        </VueTyped>
+      </div>
     </div>
     <a-carousel
         :auto-play="{interval: data.banner_time * 1000}"
@@ -20,6 +24,8 @@
 import type {menuType} from "@/api/menu_api";
 import {menuDetailApi} from "@/api/menu_api";
 import {reactive} from "vue";
+import VueTyped from "vue3typed/libs/typed/index.vue"
+
 
 const data = reactive<menuType>({
   abstract: [],
