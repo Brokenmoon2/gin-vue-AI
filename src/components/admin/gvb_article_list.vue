@@ -41,7 +41,7 @@
       </template>
       <template #tags="{record}:{record: articleType}">
         <div class="article_tags_col">
-          <a-tag v-for="(item, index) in record.tags" :color="colorList[index]">{{ item }}</a-tag>
+          <a-tag v-for="(item, index) in record.tags" :color="articleTagColorList[index]">{{ item }}</a-tag>
         </div>
       </template>
       <template #title="{record}:{record: articleType}">
@@ -67,6 +67,7 @@ import Gvb_article_update from "@/components/common/gvb_article_update.vue";
 import Gvb_article_drawer from "@/components/common/gvb_article_drawer.vue";
 import Gvb_article_content_drawer from "@/components/common/gvb_article_content_drawer.vue";
 import type {paramsType} from "@/api";
+import {articleTagColorList} from "@/global/global";
 
 interface Props {
   isUser?: boolean
@@ -77,23 +78,6 @@ const props = defineProps<Props>()
 const {isUser = false} = props
 
 const gvbTable = ref()
-
-
-const colorList = [
-  'red',
-  'orangered',
-  'orange',
-  'gold',
-  'lime',
-  'green',
-  'cyan',
-  'blue',
-  'arcoblue',
-  'purple',
-  'pinkpurple',
-  'magenta',
-  'gray'
-]
 
 const params = reactive<paramsType & { is_user: boolean }>({
   is_user: isUser

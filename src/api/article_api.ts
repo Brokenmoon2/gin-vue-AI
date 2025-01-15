@@ -22,6 +22,10 @@ export interface articleType {
     user_avatar: string
     user_id: number
     user_nick_name: string
+    content?: string
+    is_collect?: boolean
+
+    is_digg?: boolean
 }
 
 export interface articleItemType {
@@ -51,6 +55,7 @@ export interface articleDataType {
     created_at: string
     digg_count: number
     look_count: number
+    is_coll?: boolean
 }
 
 
@@ -112,4 +117,17 @@ export interface articleCalendarType {
 
 export function articleCalendarApi(): Promise<baseResponse<articleCalendarType[]>> {
     return useAxios.get("/api/articles/calendar")
+}
+
+
+export function articleDetailApi(id: string): Promise<baseResponse<articleType>> {
+    return useAxios.get("/api/articles/" + id)
+}
+
+export function articleCollectsPostApi(id: string): Promise<baseResponse<string>> {
+    return useAxios.post("/api/articles/collects", {id})
+}
+
+export function articleDiggApi(id: string): Promise<baseResponse<string>> {
+    return useAxios.post("/api/articles/digg", {id})
 }

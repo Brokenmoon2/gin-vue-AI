@@ -9,13 +9,26 @@
 <script setup lang="ts">
 import {newsType} from "@/api/news_api";
 import {reactive} from "vue";
+import {newsListApi} from "@/api/news_api";
 
 const data = reactive<newsType>({
   hotValue: "192.3万",
   index: "1",
-  link: "https://s.weibo.com/weibo?q=%E8%AF%B7%E6%8A%8A%E8%BF%99%E4%B8%AA%E9%9F%A9%E7%BB%BC%E5%BC%95%E8%BF%9B%E5%86%85%E5%A8%B1",
-  title: "请把这个韩综引进内娱",
+  link: "http://www.fengfengzhidao.com",
+  title: "枫枫知道发布八代博客了",
 })
+
+async function getData(){
+  let res = await newsListApi({
+    id: "KqndgxeLl9",
+    size: 1,
+  })
+  if (res.code){
+    return
+  }
+  Object.assign(data, res.data[0])
+}
+getData()
 
 </script>
 <style lang="scss">

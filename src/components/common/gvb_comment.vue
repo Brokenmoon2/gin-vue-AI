@@ -1,7 +1,7 @@
 <template>
   <div class="gvb_comment_components">
     <div class="add_comment">
-      <a-textarea placeholder="输入评论内容" @keydown.enter.ctrl="createComment"
+      <a-textarea ref="textareaRef" placeholder="输入评论内容" @keydown.enter.ctrl="createComment"
                   v-model="addCommentForm.content" :auto-size="{minRows: 6, maxRows: 6}"></a-textarea>
       <a-button @click="createComment" type="primary">发布评论</a-button>
     </div>
@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import {reactive, watch} from "vue";
+import {reactive, ref, watch} from "vue";
 import {commentListApi, commentCreateApi} from "@/api/comment_api";
 import type {commentType, commentAddType} from "@/api/comment_api";
 import type {listDataType, paramsType} from "@/api";
@@ -72,6 +72,16 @@ watch(() => props.articleId, () => {
     getData()
   }
 }, {immediate: true})
+
+const textareaRef = ref()
+function focus(){
+  textareaRef.value.focus()
+}
+
+defineExpose({
+  focus
+})
+
 
 </script>
 <style lang="scss">

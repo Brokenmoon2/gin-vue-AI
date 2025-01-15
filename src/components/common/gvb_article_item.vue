@@ -38,7 +38,7 @@
                      <i class="fa fa-comments"></i>
           <span>{{ props.data.comment_count }}</span>
           </span>
-          <span>
+          <span :class="{active: props.data.is_coll}">
             <i class="fa fa-star"></i>
           <span>{{ props.data.collects_count }}</span>
         </span>

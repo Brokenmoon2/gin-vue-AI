@@ -3,9 +3,14 @@
     <div class="head">
       <div class="slogan">{{ data.slogan }}</div>
       <div class="abstract">
-        <VueTyped :strings="data.abstract" loop>
-          <span class="typing"></span>
-        </VueTyped>
+        <template v-if="typeof data.abstract === 'object'">
+          <VueTyped :strings="data.abstract" loop>
+            <span class="typing"></span>
+          </VueTyped>
+        </template>
+        <template v-else>
+          {{ data.abstract }}
+        </template>
       </div>
     </div>
     <a-carousel
@@ -13,7 +18,7 @@
         indicator-type="dot"
         show-arrow="hover"
     >
-      <a-carousel-item v-for="item in data.banners">
+      <a-carousel-item v-for="item in (data.banners as bannerType[])">
         <img class="banner_image" alt="" :src="item.path"/>
       </a-carousel-item>
     </a-carousel>
@@ -21,46 +26,72 @@
 </template>
 
 <script setup lang="ts">
-import type {menuType} from "@/api/menu_api";
+import type {menuType, bannerType} from "@/api/menu_api";
 import {menuDetailApi} from "@/api/menu_api";
-import {reactive} from "vue";
+import {reactive, watch} from "vue";
 import VueTyped from "vue3typed/libs/typed/index.vue"
 
+interface BannerType {
+  abstract: string | string[]
+  banner_time?: number
+  banners: string | bannerType[]
+  slogan: string
+}
 
-const data = reactive<menuType>({
+interface Props {
+  data?: BannerType
+}
+
+const props = defineProps<Props>()
+
+const data = reactive<BannerType>({
   abstract: [],
-  abstract_time: 7,
   banner_time: 7,
-  banners: [],
-  created_at: "",
-  id: 0,
-  path: "",
+  banners: [
+    {id: 1, path: "/image/default_banner.png"}
+  ],
   slogan: "",
-  sort: 0,
-  title: "",
 })
 
 async function getData() {
-
+  if (props.data) {
+    if (typeof props.data.banners === 'string') {
+      data.banners = [{id:1, path: props.data.banners}]
+    }
+    data.abstract = props.data.abstract
+    data.banner_time = props.data.banner_time
+    data.slogan = props.data.slogan
+    return
+  }
   const key = `menus__${location.pathname}`
 
   const val = sessionStorage.getItem(key)
   if (val !== null) {
     try {
-      const jsonData = JSON.parse(val)
-      Object.assign(data, jsonData)
+      const jsonData = JSON.parse(val) as BannerType
+      data.banners = jsonData.banners
+      data.abstract = jsonData.abstract
+      data.banner_time = jsonData.banner_time
+      data.slogan = jsonData.slogan
       return
     } catch (e) {
     }
   }
 
   let res = await menuDetailApi(location.pathname)
-  Object.assign(data, res.data)
+  data.banners = res.data.banners
+  data.abstract = res.data.abstract
+  data.banner_time = res.data.banner_time
+  data.slogan = res.data.slogan
   sessionStorage.setItem(key, JSON.stringify(data))
 
 }
 
-getData()
+
+watch(() => props.data, () => {
+  getData()
+}, {immediate: true})
+
 
 </script>
 <style lang="scss">
@@ -68,6 +99,7 @@ getData()
   width: 100%;
   height: 700px;
   position: relative;
+  background-color: var(--color-fill-4);
 
   .head {
     position: absolute;

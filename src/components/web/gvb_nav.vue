@@ -59,6 +59,7 @@ const isShow = ref(true)
 if (!noScroll) {
   isShow.value = false
   window.addEventListener("scroll", scroll)
+  scroll()
 }
 
 

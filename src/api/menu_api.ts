@@ -8,7 +8,7 @@ export interface bannerType {
 
 export interface menuType {
     abstract: string[]
-    abstract_time: number
+    abstract_time?: number
     banner_time: number
     banners: bannerType[]
     created_at: string
