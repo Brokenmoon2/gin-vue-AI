@@ -8,8 +8,8 @@
         <template v-if="props.data.id === ''">
           {{ props.data.title }}
         </template>
-        <router-link v-else :to="{name: 'article', params: {id: props.data.id}}" v-html="props.data.title"></router-link>
-
+        <!--        <router-link v-else :to="{name: 'article', params: {id: props.data.id}}" v-html="props.data.title"></router-link>-->
+        <a v-else :href="`/article/${props.data.id}`" v-html="props.data.title"></a>
       </div>
       <div class="abstract">
         <a-typography-paragraph :ellipsis="{

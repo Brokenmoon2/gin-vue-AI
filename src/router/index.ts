@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import type {RouteMeta} from 'vue-router'
 import {useStore} from "@/stores";
 import {Message} from "@arco-design/web-vue";
+import NProgress from "nprogress";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -200,6 +201,14 @@ const router = createRouter({
                             component: () => import('../views/admin/system/menu_list.vue'),
                         },
                         {
+                            path: "feedback_list",
+                            name: "feedback_list",
+                            meta: {
+                                title: "用户反馈"
+                            },
+                            component: () => import('../views/admin/system/feedback_list.vue'),
+                        },
+                        {
                             path: "promotion_list",
                             name: "promotion_list",
                             meta: {
@@ -329,6 +338,11 @@ router.beforeEach((to, from, next) => {
     //         return
     //     }
     // }
-
+    NProgress.start()
     next()
+})
+
+
+router.afterEach(()=>{
+    NProgress.done()//完成进度条
 })

@@ -21,11 +21,11 @@
     </div>
     <div class="image">
       <div class="qq">
-        <img :src="store.siteInfo.qq_image" alt="">
+        <a-image :src="store.siteInfo.qq_image" alt="我的QQ"/>
         <span>QQ</span>
       </div>
       <div class="wechat">
-        <img :src="store.siteInfo.wechat_image" alt="">
+        <a-image :src="store.siteInfo.wechat_image" alt="我的微信"/>
         <span>微信</span>
       </div>
     </div>

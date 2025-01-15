@@ -1,5 +1,5 @@
 <template>
-  <div class="login_data_charts">
+  <div class="login_data_charts" style="height: 300px">
     <div class="select">
       <a-select v-model="params.date" :options="dateFilterOptions" @change="dateFilterChange"
                 placeholder="时间过滤"></a-select>

@@ -109,7 +109,10 @@ async function messagePublish() {
     return
   }
   let res = await messagePublishApi(messagePublishData)
-  if (res.code) Message.error(res.msg)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   messagePublishData.content = ""
   getRecordData()

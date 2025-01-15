@@ -57,7 +57,7 @@ watch(() => route.query, () => {
 }, {deep: true, immediate: true})
 
 
-function pageChange(){
+function pageChange() {
   getData()
 }
 
@@ -67,9 +67,17 @@ function pageChange(){
   .gvb_article_item {
     background-color: var(--color-bg-1);
     margin-bottom: 20px;
+    transition: all .3s;
+
+    &:hover {
+      transform: translateY(-5px) scale(1.005);
+      box-shadow: 0 5px 5px 5px rgba(0, 0, 0, 0.05);
+    }
 
     &:first-child {
       border-radius: 0 0 5px 5px;
+      transform: inherit;
+      box-shadow: inherit;
     }
 
     .info {
@@ -95,6 +103,18 @@ function pageChange(){
     background-color: var(--color-bg-1);
     border-radius: 0 0 5px 5px;
     padding: 40px 0;
+  }
+}
+@media screen and (min-width: 1200px) and (max-width: 1400px) {
+  .gvb_article_list{
+    .gvb_article_item{
+      .cover{
+        width: 35%;
+      }
+      .info{
+        width: 65%;
+      }
+    }
   }
 }
 </style>

@@ -59,7 +59,10 @@ async function updateArticle() {
 
 async function getData() {
   let res = await articleContentApi(props.id as string)
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   data.content = res.data
   data.id = props.id
 }

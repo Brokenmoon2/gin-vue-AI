@@ -255,7 +255,7 @@ function edit(record: RecordType<any>) {
 }
 
 // 从列表页的api里面匹配路径
-const urlRegex = /return useAxios.get\("(.*?)",/
+const urlRegex = /\.get\("(.*?)",/
 
 
 // 删除单个

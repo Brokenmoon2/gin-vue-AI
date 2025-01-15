@@ -28,7 +28,7 @@ interface dopType extends tabType {
 
 const store = useStore()
 
-const dopList: dopType[] = [
+let dopList: dopType[] = [
   {
     name: "user_info",
     title: "个人信息",
@@ -60,6 +60,23 @@ const dopList: dopType[] = [
     title: "注销退出",
   }
 ]
+
+if (store.isGeneral){
+  dopList = [
+    {
+      name: "user_info",
+      title: "个人信息",
+    },
+    {
+      name: "messages",
+      title: "我的消息",
+    },
+    {
+      name: "logout",
+      title: "注销退出",
+    }
+  ]
+}
 
 function select(value: any) {
   let val = (value as string)

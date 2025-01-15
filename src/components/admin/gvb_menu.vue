@@ -93,6 +93,7 @@ let menuList: MenuType[] = [
   {
     title: "系统管理", icon: IconSettings, name: "system", child: [
       {title: "菜单列表", icon: IconMenu, name: "menu_list"},
+      {title: "用户反馈", icon: IconMenu, name: "feedback_list"},
       {title: "广告列表", icon: IconShareAlt, name: "promotion_list"},
       {title: "系统日志", icon: IconFile, name: "log_list"},
       {title: "系统配置", icon: IconStorage, name: "system_system"},

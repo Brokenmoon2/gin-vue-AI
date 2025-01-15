@@ -69,13 +69,19 @@ const isShow = ref(false)
 async function getConfig() {
   let res = await settingsInfoApi("chat_group") as baseResponse<chatGroupConfigType>
   isShow.value = true
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   Object.assign(form, res.data)
 }
 getConfig()
 async function updateConfig() {
   let res = await settingsInfoUpdateApi("chat_group", form)
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   getConfig()
 }

@@ -59,7 +59,10 @@ async function createComment() {
     return
   }
   let res = await commentCreateApi(addCommentForm)
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   addCommentForm.content = ""
   getData()

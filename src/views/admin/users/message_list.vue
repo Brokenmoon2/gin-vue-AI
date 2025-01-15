@@ -38,7 +38,7 @@ import {messageUserListApi, messageUserRecordApi, messageUserListByUserApi} from
 import type {listDataType} from "@/api";
 import router from "@/router";
 import {useRoute} from "vue-router";
-
+import { Notification } from '@arco-design/web-vue';
 
 const route = useRoute()
 const params = reactive<messageParams>({
@@ -63,6 +63,13 @@ const user2 = ref<number>(0)
 
 async function getMessageData() {
   let res = await messageUserListApi(params)
+  if (res.code){
+    Notification.error({
+      title: res.msg,
+      content: "当前权限无法获取用户消息列表"
+    })
+    return
+  }
   messageData.list = res.data.list
   messageData.count = res.data.count
 }

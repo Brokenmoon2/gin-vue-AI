@@ -1,4 +1,4 @@
-<template>
+=<template>
   <div class="article_view">
     <gvb_nav></gvb_nav>
     <gvb_banner :data="{
@@ -15,19 +15,28 @@
               发布时间：{{ dateFormat(data.created_at) }} （{{ relativeCurrentTime(data.created_at) }}）
             </div>
             <div class="tag">
+              <IconTags></IconTags>
               <a-tag v-for="(item, index) in data.tags" :color="articleTagColorList[index]">{{ item }}</a-tag>
             </div>
           </div>
           <article>
-            <MdPreview :editor-id="mdID" v-model="data.content" :theme="store.themeString"></MdPreview>
+            <MdPreview :editor-id="mdID" v-model="data.content"
+                       :theme="store.themeString"></MdPreview>
           </article>
           <div class="next_prev">
             <div class="prev">
-              上一篇： <a href="">xxx</a>
+              上一篇：
+              <template v-if="data.prev">
+                <a :href="`/article/${data.prev.id}`">{{ data.prev?.title }}</a>
+              </template>
+              <template v-else>已经是第一篇了</template>
             </div>
             <div class="next">
               下一篇：
-              <router-link to="/article/9tYzBIsBg90FB71ekYSW">9tYzBIsBg90FB71ekYSW</router-link>
+              <template v-if="data.next">
+                <a :href="`/article/${data.next.id}`">{{ data.next?.title }}</a>
+              </template>
+              <template v-else>已经是最后一篇了</template>
             </div>
           </div>
 
@@ -51,7 +60,6 @@
           <div :class="{article_actions: true, isFixed: isFixed}">
             <gvb_card title="文章目录" class="gvb_article_dict">
               <MdCatalog
-                  v-if="isCatalogShow"
                   :scroll-element="scorllElement"
                   :offset-top="80"
                   :theme="store.themeString"
@@ -93,13 +101,14 @@ import {articleDiggApi, articleCollectsPostApi} from "@/api/article_api";
 import {Message} from "@arco-design/web-vue";
 import {onUnmounted, onMounted} from "vue";
 import {showLogin} from "@/components/common/gvb_login";
+import {IconTags} from "@arco-design/web-vue/es/icon";
+
 
 const mdID = "articleID_1007"
 
 const top = ref(974 - 70)
 const isFixed = ref(false)
 const scorllElement = document.documentElement
-
 
 const store = useStore()
 const route = useRoute()
@@ -328,6 +337,17 @@ watch(() => route.params, () => {
           }
 
           .tag {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+
+            > svg {
+              margin-right: 10px;
+              font-size: 16px;
+              font-weight: 600;
+            }
+
             .arco-tag {
               margin-right: 10px;
 

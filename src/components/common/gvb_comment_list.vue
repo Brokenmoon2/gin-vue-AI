@@ -46,6 +46,7 @@ import {IconDelete, IconMessage} from "@arco-design/web-vue/es/icon";
 import {IconHeart} from "@arco-design/web-vue/es/icon";
 import {nextTick, ref} from "vue";
 import {showMessageRecord} from "@/components/common/gvb_message_record";
+import {showLogin} from "@/components/common/gvb_login";
 
 const store = useStore()
 
@@ -58,7 +59,10 @@ const emits = defineEmits(["list"])
 
 async function deleteComment(record: commentType) {
   let res = await commentDeleteApi(record.id)
-  if (res.code) Message.error(res.msg)
+  if (res.code){
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   emits("list")
 }
@@ -95,7 +99,10 @@ async function applyComment(record: commentType) {
   }
 
   let res = await commentCreateApi(data)
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   record.applyContent = ""
   saveID.value = record.id
@@ -104,12 +111,21 @@ async function applyComment(record: commentType) {
 
 async function commentDigg(record: commentType) {
   let res = await commentDiggApi(record.id)
-  if (res.code) Message.error(res.msg)
+  if (res.code) {
+    Message.error(res.msg)
+    return
+  }
   Message.success(res.msg)
   record.digg_count++
 }
 
 function avatarClick(item: commentType) {
+  if (!store.isLogin) {
+    Message.warning("请登录")
+    showLogin()
+    return
+  }
+
   if (store.userInfo.user_id === item.user_id) {
     Message.warning("不能和自己聊天")
     return

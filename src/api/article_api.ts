@@ -3,6 +3,11 @@ import {useAxios} from "@/api/index";
 import type {optionType} from "@/types";
 import {cacheRequest} from "@/api/index";
 
+export interface articleItem {
+    id: string
+    title: string
+}
+
 export interface articleType {
     abstract: string
     banner_id: number
@@ -26,6 +31,8 @@ export interface articleType {
     is_collect?: boolean
 
     is_digg?: boolean
+    next?: articleItem | null
+    prev?: articleItem | null
 }
 
 export interface articleItemType {
@@ -140,6 +147,6 @@ export interface articleSearchType {
     title: string
 }
 
-export function articleSearchApi(params: paramsType) :Promise<baseResponse<listDataType<articleSearchType>>>{
+export function articleSearchApi(params: paramsType): Promise<baseResponse<listDataType<articleSearchType>>> {
     return useAxios.get("/api/articles/text", {params})
 }

@@ -42,7 +42,6 @@ import {loginEmailApi} from "@/api/user_api";
 import type {loginEmailType} from "@/api/user_api";
 import {Message} from "@arco-design/web-vue";
 import {useStore} from "@/stores";
-import {useRoute} from "vue-router";
 import {loginQQPathApi} from "@/api/user_api";
 import {Form, FormItem, Input, Button} from "@arco-design/web-vue";
 
@@ -99,10 +98,9 @@ async function qqLogin() {
     return
   }
 
-  const route = useRoute()
   // 存一下我当前点登录的路径
   // 判断是不是login页面来的
-  let path = route.path
+  let path = location.pathname
   if (props.qqRedirectPath){
     path = props.qqRedirectPath
   }

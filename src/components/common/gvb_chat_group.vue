@@ -52,14 +52,6 @@
         </a-checkbox-group>
       </div>
       <div class="footer">
-        <div class="menu">
-          <div class="icon" title="图片上传" v-if="config.isSendImage" @click="sendImageEvent">
-            <IconImage></IconImage>
-          </div>
-          <div class="icon" title="文件上传" v-if="config.isSendFile" @click="sendFileEvent">
-            <IconFile></IconFile>
-          </div>
-        </div>
         <div class="inRoom" v-if="!socket">
           <a-button type="primary" @click="websocketConnect">进入聊天室</a-button>
         </div>
@@ -73,7 +65,7 @@
                     style="height: 100%"></a-textarea>
         <MdEditor v-else v-model="content" :theme="store.themeString" placeholder="聊天内容"
                   :max-length="config.contentLength" :toolbars="[]"
-                  :footers="[]" :on-upload-img="config.isSendImage ? onUploadImg : undefined" :preview="false"/>
+                  :footers="[]" :on-upload-img="config.isSendImage ? onUploadImage : undefined" :preview="false"/>
         <a-button type="primary" class="send_button" @click="sendData">发送</a-button>
       </div>
     </a-spin>
@@ -92,7 +84,6 @@ import {Message} from "@arco-design/web-vue";
 import {settingsInfoApi} from "@/api/settings_api";
 import type {chatGroupConfigType} from "@/api/chat_api";
 import type {baseResponse} from "@/api";
-import {IconImage, IconFile} from "@arco-design/web-vue/es/icon";
 import {IconRefresh} from "@arco-design/web-vue/es/icon";
 import {dateTimeFormat} from "@/utils/date";
 import {MdEditor, MdPreview} from 'md-editor-v3';
@@ -102,8 +93,19 @@ import {useStore} from "@/stores";
 import {onUnmounted} from "vue";
 
 
-
 const store = useStore()
+
+
+function onUploadImage(files: Array<File>, callback: (urls: Array<string>) => void): Promise<void> {
+  if (!store.isLogin) {
+    Message.warning("未登陆用户，不可上传图片")
+    return new Promise(() => {
+
+    })
+  }
+  return onUploadImg(files, callback)
+}
+
 const params = reactive<paramsType>({
   page: 1,
   limit: 50,

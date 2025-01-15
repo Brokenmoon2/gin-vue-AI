@@ -9,8 +9,8 @@
       </a-form-item>
       <a-form-item validate-trigger="blur" field="content"
                    :rules="[{required: true, message:'请输入反馈内容', type:'string'}]">
-        <a-textarea  show-word-limit :max-length="160" v-model="form.content" :auto-size="{minRows: 4, maxRows:4}"
-                     placeholder="请输入反馈内容"></a-textarea>
+        <a-textarea show-word-limit :max-length="160" v-model="form.content" :auto-size="{minRows: 4, maxRows:4}"
+                    placeholder="请输入反馈内容"></a-textarea>
       </a-form-item>
       <a-form-item>
         <a-button @click="feedbackCreate" type="primary" style="width: 100%">发布</a-button>
@@ -38,6 +38,7 @@ import {reactive, ref} from "vue";
 import {dateFormat} from "@/utils/date";
 import {feedbackListApi, feedbackCreateApi} from "@/api/fade_back_api";
 import {Message} from "@arco-design/web-vue";
+import type {paramsType} from "@/api";
 
 
 const form = reactive<fadeBackCreateType>({
@@ -47,8 +48,12 @@ const form = reactive<fadeBackCreateType>({
 
 const list = ref<fadeBackType[]>([])
 
+const params: paramsType = reactive({
+  limit: 10,
+})
+
 async function getData() {
-  let res = await feedbackListApi()
+  let res = await feedbackListApi(params)
   list.value = res.data.list
 }
 

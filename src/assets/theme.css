@@ -2,8 +2,8 @@ body {
     --bg: #f0eeee;
     --active: rgb(var(--arcoblue-6));
     --login_bg: rgba(255, 255, 255, 0.8);
-    --charts_color1: #3f95c2;
-    --charts_color2: #6dc8e1;
+    --charts_color1: #53b8ec;
+    --charts_color2: #f15427;
 
     --nav_text_color: white;
 
