@@ -5,7 +5,7 @@ body {
     --charts_color1: #3f95c2;
     --charts_color2: #6dc8e1;
 
-    --nav_text_color: #dcdcdc;
+    --nav_text_color: white;
 }
 
 body[arco-theme='dark'] {

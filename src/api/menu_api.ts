@@ -70,3 +70,7 @@ export interface menuNameType {
 export function menuNameListApi():Promise<baseResponse<menuNameType[]>>{
     return useAxios.get("/api/menu_names")
 }
+
+export function menuDetailApi(path: string):Promise<baseResponse<menuType>>{
+    return useAxios.get("/api/menus/detail", {params: {path}})
+}

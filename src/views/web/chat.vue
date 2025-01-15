@@ -9,7 +9,6 @@ import Gvb_nav from "@/components/web/gvb_nav.vue";
 </script>
 <style lang="scss">
 .index_view {
-  background-color: #494949;
   height: 100vh;
 }
 </style>
